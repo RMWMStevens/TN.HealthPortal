@@ -1,0 +1,49 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+variables:
+  dotNetSdkVersion: 6.x.x
+
+pool:
+  vmImage: ubuntu-latest
+
+stages: 
+- stage: BuildAndTest
+  displayName: 'Build and Test'
+  jobs: 
+  - job: BuildAndTest
+    steps:
+    # Use .NET SDK
+    - task: UseDotNet@2
+      displayName: 'Use .NET SDK'
+      inputs:
+        packageType: sdk
+        version: 6.0.x
+    # Restore
+    - task: DotNetCoreCLI@2
+      displayName: Restore .NET Core dependencies
+      continueOnError: false
+      inputs:
+        command: 'restore'
+        verbosityRestore: normal
+        projects: 'src/*/*.csproj'
+    # Build
+    - task: DotNetCoreCLI@2
+      displayName: 'Build the project'
+      inputs:
+        command: 'build'
+        arguments: '--no-restore --configuration Release'
+        projects: 'src/*/*.csproj'
+    # Run unit tests
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Unit Tests'
+      inputs:
+        command: 'test'
+        arguments: '--no-build --configuration Release'
+        publishTestResults: true
+        projects: 'src/*/*.Tests.csproj'
