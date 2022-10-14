@@ -10,7 +10,7 @@ variables:
   dotNetSdkVersion: 6.x.x
 
 pool:
-  vmImage: ubuntu-latest
+  name: 'default'
 
 stages: 
 - stage: BuildAndTest
