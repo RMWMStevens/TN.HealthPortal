@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TN.HealthPortal.Lib", "TN.HealthPortal.Lib\TN.HealthPortal.Lib.csproj", "{77553387-60EE-4939-8E6D-68B6A846BB41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TN.HealthPortal.Lib.Tests", "TN.HealthPortal.Lib.Tests\TN.HealthPortal.Lib.Tests.csproj", "{4DD2CE01-376B-4C4B-8B4F-80B4687DF73A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77553387-60EE-4939-8E6D-68B6A846BB41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77553387-60EE-4939-8E6D-68B6A846BB41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77553387-60EE-4939-8E6D-68B6A846BB41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77553387-60EE-4939-8E6D-68B6A846BB41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DD2CE01-376B-4C4B-8B4F-80B4687DF73A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DD2CE01-376B-4C4B-8B4F-80B4687DF73A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DD2CE01-376B-4C4B-8B4F-80B4687DF73A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DD2CE01-376B-4C4B-8B4F-80B4687DF73A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1ADC108-E0EB-42F4-A55B-407BEA3FEFE9}
+	EndGlobalSection
+EndGlobal
