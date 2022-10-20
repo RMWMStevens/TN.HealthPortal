@@ -1,4 +1,4 @@
-﻿namespace TN.HealthPortal.Lib.Farms
+﻿namespace TN.HealthPortal.Lib.Models
 {
     public class HealthStatus
     {

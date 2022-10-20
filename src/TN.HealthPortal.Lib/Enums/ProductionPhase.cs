@@ -1,4 +1,4 @@
-﻿namespace TN.HealthPortal.Lib.Farms.Enums
+﻿namespace TN.HealthPortal.Lib.Enums
 {
     public enum ProductionPhase
     {

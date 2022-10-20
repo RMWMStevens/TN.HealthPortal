@@ -1,6 +1,4 @@
-﻿using TN.HealthPortal.Lib.Farms;
-
-namespace TN.HealthPortal.Lib.Users
+﻿namespace TN.HealthPortal.Lib.Models
 {
     public class Veterinarian : User
     {

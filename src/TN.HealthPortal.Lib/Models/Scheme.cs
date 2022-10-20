@@ -1,6 +1,6 @@
-﻿using TN.HealthPortal.Lib.Farms.Enums;
+﻿using TN.HealthPortal.Lib.Enums;
 
-namespace TN.HealthPortal.Lib.Farms
+namespace TN.HealthPortal.Lib.Models
 {
     public abstract class Scheme
     {

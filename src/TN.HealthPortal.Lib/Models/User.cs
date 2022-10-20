@@ -1,4 +1,4 @@
-﻿namespace TN.HealthPortal.Lib.Users
+﻿namespace TN.HealthPortal.Lib.Models
 {
     public abstract class User
     {
