@@ -18,12 +18,12 @@
 
         public Source Source { get; set; }
 
-        public HealthStatus HealthStatus { get; set; }
+        public List<DiseaseStatus> DiseaseStatuses { get; set; } = new();
 
-        public DewormingProtocol? DewormingProtocol { get; set; }
+        public List<DewormingScheme> DewormingSchemes { get; set; } = new();
 
-        public VaccinationProtocol? VaccinationProtocol { get; set; }
+        public List<VaccinationScheme> VaccinationSchemes { get; set; } = new();
 
-        public List<Veterinarian> Veterinarians { get; set; }
+        public List<Veterinarian> Veterinarians { get; set; } = new();
     }
 }

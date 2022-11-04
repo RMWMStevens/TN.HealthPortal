@@ -1,6 +1,6 @@
 ﻿namespace TN.HealthPortal.Lib.Models
 {
-    public abstract class Product
+    public class Product
     {
         public string Name { get; set; }
 

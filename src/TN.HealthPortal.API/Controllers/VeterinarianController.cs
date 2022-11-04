@@ -17,7 +17,7 @@ namespace TN.HealthPortal.API.Controllers
                 EmployeeCode = employeeCode,
                 Farms = new List<Farm>()
                 {
-                    new Farm 
+                    new Farm
                     {
                         Name = "Van Beek",
                         BlnNumber = "106860",
@@ -27,7 +27,7 @@ namespace TN.HealthPortal.API.Controllers
                         SiteType = "Genetic Nucleus",
                         Capacity = 3500
                     },
-                    new Farm 
+                    new Farm
                     {
                         Name = "Ashorst",
                         BlnNumber = "005630",

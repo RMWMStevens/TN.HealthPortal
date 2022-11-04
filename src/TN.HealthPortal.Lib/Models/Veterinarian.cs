@@ -2,6 +2,6 @@
 {
     public class Veterinarian : User
     {
-        public List<Farm> Farms { get; set; }
+        public List<Farm> Farms { get; set; } = new();
     }
 }
