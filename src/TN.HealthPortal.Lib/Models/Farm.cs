@@ -18,7 +18,7 @@
 
         public Source Source { get; set; }
 
-        public HealthStatus HealthStatuses { get; set; }
+        public HealthStatus HealthStatus { get; set; }
 
         public DewormingProtocol? DewormingProtocol { get; set; }
 
