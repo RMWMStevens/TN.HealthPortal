@@ -19,5 +19,10 @@ namespace TN.HealthPortal.Lib.Services
 
         public Farm GetByBlnNumber(string blnNumber) => farmRepository
             .Find(_ => _.BlnNumber == blnNumber).First();
+
+        void IFarmService.AddFarmAsync(Farm farm)
+        {
+            farmRepository.Add(farm);
+        }
     }
 }

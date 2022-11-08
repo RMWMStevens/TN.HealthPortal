@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using TN.HealthPortal.API.Models;
 using TN.HealthPortal.Lib.Entities;
 using TN.HealthPortal.Lib.Services;
 
@@ -9,10 +11,12 @@ namespace TN.HealthPortal.API.Controllers
     public class FarmController : Controller
     {
         private readonly IFarmService farmService;
+        private readonly IMapper mapper;
 
-        public FarmController(IFarmService farmService)
+        public FarmController(IFarmService farmService, IMapper mapper)
         {
             this.farmService = farmService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -65,6 +69,15 @@ namespace TN.HealthPortal.API.Controllers
 
                 return Ok($"Farm created with BLN number {blnNumber}");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddNewFarm([FromBody] FarmCreationRequest farmCreationRequest)
+        {
+            var farm = mapper.Map<Farm>(farmCreationRequest);
+
+            farmService.AddFarmAsync(farm);
+            return Ok($"Farm created with BLN number {farmCreationRequest.BlnNumber}");
         }
     }
 }
