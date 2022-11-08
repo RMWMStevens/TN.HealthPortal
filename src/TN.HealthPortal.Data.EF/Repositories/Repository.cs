@@ -2,45 +2,47 @@
 using System.Linq.Expressions;
 using TN.HealthPortal.Lib.Repositories;
 
-// Not yet usable since it needs a translation step between Lib.Models and Data.Entities using AutoMapper
-
 namespace TN.HealthPortal.Data.EF.Repositories
 {
     internal class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly DbContext context;
+        protected readonly AppDbContext context;
         protected readonly DbSet<TEntity> entities;
 
-        public Repository(DbContext context)
+        public Repository(AppDbContext context)
         {
             this.context = context;
+
             entities = context.Set<TEntity>();
         }
-
-        public TEntity Get(int id)
-            => entities.Find(id);
-
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> expression)
-            => entities.Where(expression);
 
         public void Add(TEntity entity)
         {
             context.Add(entity);
+            context.SaveChanges();
         }
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
-            context.AddRange(entities);
+            context.AddRange(this.entities);
+            context.SaveChanges();
+        }
+
+        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        {
+            return entities.Where(predicate);
         }
 
         public void Remove(TEntity entity)
         {
             context.Remove(entity);
+            context.SaveChanges();
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)
         {
-            context.RemoveRange(entities);
+            context.RemoveRange(this.entities);
+            context.SaveChanges();
         }
     }
 }

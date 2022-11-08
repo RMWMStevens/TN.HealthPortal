@@ -9,6 +9,25 @@ namespace TN.HealthPortal.Data.EF.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Farms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BlnNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PremiseID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SiteType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Capacity = table.Column<int>(type: "int", nullable: false),
+                    History = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Farms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Manufacturers",
                 columns: table => new
                 {
@@ -31,30 +50,55 @@ namespace TN.HealthPortal.Data.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sources",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Gilt = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Boar = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Semen = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    History = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sources", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Veterinarians",
                 columns: table => new
                 {
-                    EmployeeCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmployeeCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Veterinarians", x => x.EmployeeCode);
+                    table.PrimaryKey("PK_Veterinarians", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiseaseStatuses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Disease = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FarmId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiseaseStatuses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DiseaseStatuses_Farms_FarmId",
+                        column: x => x.FarmId,
+                        principalTable: "Farms",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sources",
+                columns: table => new
+                {
+                    FarmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Gilt = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Boar = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Semen = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sources", x => x.FarmId);
+                    table.ForeignKey(
+                        name: "FK_Sources_Farms_FarmId",
+                        column: x => x.FarmId,
+                        principalTable: "Farms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,25 +121,25 @@ namespace TN.HealthPortal.Data.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Farms",
+                name: "FarmVeterinarians",
                 columns: table => new
                 {
-                    BlnNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PremiseID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SiteType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Capacity = table.Column<int>(type: "int", nullable: false),
-                    SourceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    FarmsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VeterinariansId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Farms", x => new { x.BlnNumber, x.PremiseID });
+                    table.PrimaryKey("PK_FarmVeterinarians", x => new { x.FarmsId, x.VeterinariansId });
                     table.ForeignKey(
-                        name: "FK_Farms_Sources_SourceId",
-                        column: x => x.SourceId,
-                        principalTable: "Sources",
+                        name: "FK_FarmVeterinarians_Farms_FarmsId",
+                        column: x => x.FarmsId,
+                        principalTable: "Farms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FarmVeterinarians_Veterinarians_VeterinariansId",
+                        column: x => x.VeterinariansId,
+                        principalTable: "Veterinarians",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -123,67 +167,21 @@ namespace TN.HealthPortal.Data.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DiseaseStatuses",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Disease = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FarmEntityBlnNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FarmEntityPremiseID = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DiseaseStatuses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DiseaseStatuses_Farms_FarmEntityBlnNumber_FarmEntityPremiseID",
-                        columns: x => new { x.FarmEntityBlnNumber, x.FarmEntityPremiseID },
-                        principalTable: "Farms",
-                        principalColumns: new[] { "BlnNumber", "PremiseID" });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FarmVeterinarians",
-                columns: table => new
-                {
-                    VeterinariansEmployeeCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FarmsBlnNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FarmsPremiseID = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FarmVeterinarians", x => new { x.VeterinariansEmployeeCode, x.FarmsBlnNumber, x.FarmsPremiseID });
-                    table.ForeignKey(
-                        name: "FK_FarmVeterinarians_Farms_FarmsBlnNumber_FarmsPremiseID",
-                        columns: x => new { x.FarmsBlnNumber, x.FarmsPremiseID },
-                        principalTable: "Farms",
-                        principalColumns: new[] { "BlnNumber", "PremiseID" },
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FarmVeterinarians_Veterinarians_VeterinariansEmployeeCode",
-                        column: x => x.VeterinariansEmployeeCode,
-                        principalTable: "Veterinarians",
-                        principalColumn: "EmployeeCode",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DewormingSchemes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RouteOfAdministration = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FarmEntityBlnNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FarmEntityPremiseID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    FarmId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DewormingSchemes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DewormingSchemes_Farms_FarmEntityBlnNumber_FarmEntityPremiseID",
-                        columns: x => new { x.FarmEntityBlnNumber, x.FarmEntityPremiseID },
+                        name: "FK_DewormingSchemes_Farms_FarmId",
+                        column: x => x.FarmId,
                         principalTable: "Farms",
-                        principalColumns: new[] { "BlnNumber", "PremiseID" });
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_DewormingSchemes_Schemes_Id",
                         column: x => x.Id,
@@ -197,17 +195,16 @@ namespace TN.HealthPortal.Data.EF.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PathogenName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FarmEntityBlnNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FarmEntityPremiseID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    FarmId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VaccinationSchemes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VaccinationSchemes_Farms_FarmEntityBlnNumber_FarmEntityPremiseID",
-                        columns: x => new { x.FarmEntityBlnNumber, x.FarmEntityPremiseID },
+                        name: "FK_VaccinationSchemes_Farms_FarmId",
+                        column: x => x.FarmId,
                         principalTable: "Farms",
-                        principalColumns: new[] { "BlnNumber", "PremiseID" });
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_VaccinationSchemes_Pathogens_PathogenName",
                         column: x => x.PathogenName,
@@ -222,24 +219,19 @@ namespace TN.HealthPortal.Data.EF.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DewormingSchemes_FarmEntityBlnNumber_FarmEntityPremiseID",
+                name: "IX_DewormingSchemes_FarmId",
                 table: "DewormingSchemes",
-                columns: new[] { "FarmEntityBlnNumber", "FarmEntityPremiseID" });
+                column: "FarmId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiseaseStatuses_FarmEntityBlnNumber_FarmEntityPremiseID",
+                name: "IX_DiseaseStatuses_FarmId",
                 table: "DiseaseStatuses",
-                columns: new[] { "FarmEntityBlnNumber", "FarmEntityPremiseID" });
+                column: "FarmId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Farms_SourceId",
-                table: "Farms",
-                column: "SourceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FarmVeterinarians_FarmsBlnNumber_FarmsPremiseID",
+                name: "IX_FarmVeterinarians_VeterinariansId",
                 table: "FarmVeterinarians",
-                columns: new[] { "FarmsBlnNumber", "FarmsPremiseID" });
+                column: "VeterinariansId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ManufacturerName",
@@ -252,9 +244,9 @@ namespace TN.HealthPortal.Data.EF.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VaccinationSchemes_FarmEntityBlnNumber_FarmEntityPremiseID",
+                name: "IX_VaccinationSchemes_FarmId",
                 table: "VaccinationSchemes",
-                columns: new[] { "FarmEntityBlnNumber", "FarmEntityPremiseID" });
+                column: "FarmId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VaccinationSchemes_PathogenName",
@@ -274,6 +266,9 @@ namespace TN.HealthPortal.Data.EF.Migrations
                 name: "FarmVeterinarians");
 
             migrationBuilder.DropTable(
+                name: "Sources");
+
+            migrationBuilder.DropTable(
                 name: "VaccinationSchemes");
 
             migrationBuilder.DropTable(
@@ -287,9 +282,6 @@ namespace TN.HealthPortal.Data.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "Schemes");
-
-            migrationBuilder.DropTable(
-                name: "Sources");
 
             migrationBuilder.DropTable(
                 name: "Products");

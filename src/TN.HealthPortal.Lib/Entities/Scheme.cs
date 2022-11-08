@@ -1,9 +1,12 @@
-﻿using TN.HealthPortal.Lib.Enums;
+﻿using TN.HealthPortal.Lib.Entities.Common;
+using TN.HealthPortal.Lib.Enums;
 
-namespace TN.HealthPortal.Lib.Models
+namespace TN.HealthPortal.Lib.Entities
 {
-    public abstract class Scheme
+    public abstract class Scheme : Entity
     {
+        public Guid Id { get; set; }
+
         public string Dose { get; set; }
 
         public string Timing { get; set; }

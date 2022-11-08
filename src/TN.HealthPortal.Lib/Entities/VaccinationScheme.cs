@@ -1,4 +1,4 @@
-﻿namespace TN.HealthPortal.Lib.Models
+﻿namespace TN.HealthPortal.Lib.Entities
 {
     public class VaccinationScheme : Scheme
     {

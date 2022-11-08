@@ -4,13 +4,11 @@ namespace TN.HealthPortal.Lib.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        TEntity Get(int id);
-
-        IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> expression);
-
         void Add(TEntity entity);
 
         void AddRange(IEnumerable<TEntity> entities);
+
+        IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 
         void Remove(TEntity entity);
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TN.HealthPortal.Lib.Services;
 
 namespace TN.HealthPortal.Lib
 {
@@ -6,7 +7,7 @@ namespace TN.HealthPortal.Lib
     {
         public static IServiceCollection AddLogicLayer(this IServiceCollection services)
         {
-            //services.AddScoped<IService, Service>();
+            services.AddScoped<IFarmService, FarmService>();
 
             return services;
         }

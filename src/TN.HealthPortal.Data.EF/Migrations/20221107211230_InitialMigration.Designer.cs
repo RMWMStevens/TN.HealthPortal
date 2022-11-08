@@ -12,7 +12,7 @@ using TN.HealthPortal.Data.EF;
 namespace TN.HealthPortal.Data.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221104110127_InitialMigration")]
+    [Migration("20221107211230_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,25 +24,22 @@ namespace TN.HealthPortal.Data.EF.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("FarmEntityVeterinarianEntity", b =>
+            modelBuilder.Entity("FarmVeterinarian", b =>
                 {
-                    b.Property<string>("VeterinariansEmployeeCode")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("FarmsId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FarmsBlnNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("VeterinariansId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FarmsPremiseID")
-                        .HasColumnType("nvarchar(450)");
+                    b.HasKey("FarmsId", "VeterinariansId");
 
-                    b.HasKey("VeterinariansEmployeeCode", "FarmsBlnNumber", "FarmsPremiseID");
-
-                    b.HasIndex("FarmsBlnNumber", "FarmsPremiseID");
+                    b.HasIndex("VeterinariansId");
 
                     b.ToTable("FarmVeterinarians", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.DiseaseStatusEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.DiseaseStatus", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,11 +49,8 @@ namespace TN.HealthPortal.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FarmEntityBlnNumber")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FarmEntityPremiseID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("FarmId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -64,20 +58,22 @@ namespace TN.HealthPortal.Data.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FarmEntityBlnNumber", "FarmEntityPremiseID");
+                    b.HasIndex("FarmId");
 
-                    b.ToTable("DiseaseStatuses");
+                    b.ToTable("DiseaseStatuses", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.FarmEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Farm", b =>
                 {
-                    b.Property<string>("BlnNumber")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PremiseID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BlnNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -88,7 +84,15 @@ namespace TN.HealthPortal.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("History")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PremiseID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -96,37 +100,32 @@ namespace TN.HealthPortal.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("SourceId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("Id");
 
-                    b.HasKey("BlnNumber", "PremiseID");
-
-                    b.HasIndex("SourceId");
-
-                    b.ToTable("Farms");
+                    b.ToTable("Farms", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.ManufacturerEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Manufacturer", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Name");
 
-                    b.ToTable("Manufacturers");
+                    b.ToTable("Manufacturers", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.PathogenEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Pathogen", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Name");
 
-                    b.ToTable("Pathogens");
+                    b.ToTable("Pathogens", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.ProductEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -144,10 +143,10 @@ namespace TN.HealthPortal.Data.EF.Migrations
 
                     b.HasIndex("ManufacturerName");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.SchemeEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Scheme", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,13 +174,12 @@ namespace TN.HealthPortal.Data.EF.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Schemes");
+                    b.ToTable("Schemes", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.SourceEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Source", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("FarmId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Boar")
@@ -192,109 +190,93 @@ namespace TN.HealthPortal.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("History")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Semen")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("FarmId");
 
-                    b.ToTable("Sources");
+                    b.ToTable("Sources", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.VeterinarianEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Veterinarian", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("EmployeeCode")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("EmployeeCode");
+                    b.HasKey("Id");
 
-                    b.ToTable("Veterinarians");
+                    b.ToTable("Veterinarians", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.DewormingSchemeEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.DewormingScheme", b =>
                 {
-                    b.HasBaseType("TN.HealthPortal.Data.EF.Entities.SchemeEntity");
+                    b.HasBaseType("TN.HealthPortal.Lib.Entities.Scheme");
 
-                    b.Property<string>("FarmEntityBlnNumber")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FarmEntityPremiseID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("FarmId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RouteOfAdministration")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("FarmEntityBlnNumber", "FarmEntityPremiseID");
+                    b.HasIndex("FarmId");
 
-                    b.ToTable("DewormingSchemes");
+                    b.ToTable("DewormingSchemes", (string)null);
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.VaccinationSchemeEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.VaccinationScheme", b =>
                 {
-                    b.HasBaseType("TN.HealthPortal.Data.EF.Entities.SchemeEntity");
+                    b.HasBaseType("TN.HealthPortal.Lib.Entities.Scheme");
 
-                    b.Property<string>("FarmEntityBlnNumber")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FarmEntityPremiseID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("FarmId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PathogenName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.HasIndex("FarmId");
+
                     b.HasIndex("PathogenName");
 
-                    b.HasIndex("FarmEntityBlnNumber", "FarmEntityPremiseID");
-
-                    b.ToTable("VaccinationSchemes");
+                    b.ToTable("VaccinationSchemes", (string)null);
                 });
 
-            modelBuilder.Entity("FarmEntityVeterinarianEntity", b =>
+            modelBuilder.Entity("FarmVeterinarian", b =>
                 {
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.VeterinarianEntity", null)
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Farm", null)
                         .WithMany()
-                        .HasForeignKey("VeterinariansEmployeeCode")
+                        .HasForeignKey("FarmsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.FarmEntity", null)
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Veterinarian", null)
                         .WithMany()
-                        .HasForeignKey("FarmsBlnNumber", "FarmsPremiseID")
+                        .HasForeignKey("VeterinariansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.DiseaseStatusEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.DiseaseStatus", b =>
                 {
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.FarmEntity", null)
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Farm", null)
                         .WithMany("DiseaseStatuses")
-                        .HasForeignKey("FarmEntityBlnNumber", "FarmEntityPremiseID");
+                        .HasForeignKey("FarmId");
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.FarmEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Product", b =>
                 {
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.SourceEntity", "Source")
-                        .WithMany()
-                        .HasForeignKey("SourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Source");
-                });
-
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.ProductEntity", b =>
-                {
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.ManufacturerEntity", "Manufacturer")
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Manufacturer", "Manufacturer")
                         .WithMany("Products")
                         .HasForeignKey("ManufacturerName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -303,9 +285,9 @@ namespace TN.HealthPortal.Data.EF.Migrations
                     b.Navigation("Manufacturer");
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.SchemeEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Scheme", b =>
                 {
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.ProductEntity", "Product")
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -314,50 +296,62 @@ namespace TN.HealthPortal.Data.EF.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.DewormingSchemeEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Source", b =>
                 {
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.SchemeEntity", null)
-                        .WithOne()
-                        .HasForeignKey("TN.HealthPortal.Data.EF.Entities.DewormingSchemeEntity", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Farm", null)
+                        .WithOne("Source")
+                        .HasForeignKey("TN.HealthPortal.Lib.Entities.Source", "FarmId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.FarmEntity", null)
-                        .WithMany("DewormingSchemes")
-                        .HasForeignKey("FarmEntityBlnNumber", "FarmEntityPremiseID");
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.VaccinationSchemeEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.DewormingScheme", b =>
                 {
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.SchemeEntity", null)
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Farm", null)
+                        .WithMany("DewormingSchemes")
+                        .HasForeignKey("FarmId");
+
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Scheme", null)
                         .WithOne()
-                        .HasForeignKey("TN.HealthPortal.Data.EF.Entities.VaccinationSchemeEntity", "Id")
+                        .HasForeignKey("TN.HealthPortal.Lib.Entities.DewormingScheme", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.VaccinationScheme", b =>
+                {
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Farm", null)
+                        .WithMany("VaccinationSchemes")
+                        .HasForeignKey("FarmId");
+
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Scheme", null)
+                        .WithOne()
+                        .HasForeignKey("TN.HealthPortal.Lib.Entities.VaccinationScheme", "Id")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.PathogenEntity", "Pathogen")
+                    b.HasOne("TN.HealthPortal.Lib.Entities.Pathogen", "Pathogen")
                         .WithMany()
                         .HasForeignKey("PathogenName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TN.HealthPortal.Data.EF.Entities.FarmEntity", null)
-                        .WithMany("VaccinationSchemes")
-                        .HasForeignKey("FarmEntityBlnNumber", "FarmEntityPremiseID");
-
                     b.Navigation("Pathogen");
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.FarmEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Farm", b =>
                 {
                     b.Navigation("DewormingSchemes");
 
                     b.Navigation("DiseaseStatuses");
 
+                    b.Navigation("Source")
+                        .IsRequired();
+
                     b.Navigation("VaccinationSchemes");
                 });
 
-            modelBuilder.Entity("TN.HealthPortal.Data.EF.Entities.ManufacturerEntity", b =>
+            modelBuilder.Entity("TN.HealthPortal.Lib.Entities.Manufacturer", b =>
                 {
                     b.Navigation("Products");
                 });

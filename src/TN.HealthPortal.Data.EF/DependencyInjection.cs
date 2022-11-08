@@ -12,12 +12,10 @@ namespace TN.HealthPortal.Data.EF
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
-                    //configuration.GetConnectionString("DatabaseConnectionString"),
-                    "Server=tcp:sql-tnhp-a.database.windows.net,1433;Initial Catalog=db-tnhp-a;Persist Security Info=False;User ID=sqladmin;Password=Time4Coffee;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
-                    b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+                    configuration.GetConnectionString("DatabaseConnectionString"),
+                    builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
-            //services.AddScoped<IRepository, Repository>();
-            services.AddScoped<ITempFarmRepository, TempFarmRepository>();
+            services.AddScoped<IFarmRepository, FarmRepository>();
 
             return services;
         }

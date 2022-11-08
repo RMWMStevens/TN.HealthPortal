@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Metadata;
-using TN.HealthPortal.Data.EF.Entities;
+using TN.HealthPortal.Lib.Entities;
+using TN.HealthPortal.Lib.Entities.Common;
 
 namespace TN.HealthPortal.Data.EF
 {
@@ -11,29 +11,68 @@ namespace TN.HealthPortal.Data.EF
             : base(options)
         { }
 
-        public DbSet<FarmEntity> Farms { get; set; }
+        public DbSet<Farm> Farms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<FarmEntity>().HasKey(_ => new { _.BlnNumber, _.PremiseID });
+            SetPrimaryKeys(modelBuilder);
+            SetTableNames(modelBuilder);
+            SetJoiningTableNames(modelBuilder);
+        }
 
-            modelBuilder.Entity<SchemeEntity>().Property(_ => _.Id)
-                .ValueGeneratedOnAdd()
-                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
-            modelBuilder.Entity<DiseaseStatusEntity>().Property(_ => _.Id)
-                .ValueGeneratedOnAdd()
-                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
-            modelBuilder.Entity<ProductEntity>().Property(_ => _.Id)
-                .ValueGeneratedOnAdd()
-                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
-            modelBuilder.Entity<SourceEntity>().Property(_ => _.Id)
-                .ValueGeneratedOnAdd()
-                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
+        private void SetPrimaryKeys(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Farm>().HasKey(_ => _.Id);
+            modelBuilder.Entity<Manufacturer>().HasKey(_ => _.Name);
+            modelBuilder.Entity<Pathogen>().HasKey(_ => _.Name);
+            modelBuilder.Entity<Source>().HasKey(_ => _.FarmId);
+            modelBuilder.Entity<Veterinarian>().HasKey(_ => _.Id);
+        }
 
-            modelBuilder.Entity<FarmEntity>()
+        private void SetTableNames(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Farm>(_ => _.ToTable("Farms"));
+            modelBuilder.Entity<DewormingScheme>(_ => _.ToTable("DewormingSchemes"));
+            modelBuilder.Entity<Source>(_ => _.ToTable("Sources"));
+            modelBuilder.Entity<Veterinarian>(_ => _.ToTable("Veterinarians"));
+            modelBuilder.Entity<DiseaseStatus>(_ => _.ToTable("DiseaseStatuses"));
+            modelBuilder.Entity<Manufacturer>(_ => _.ToTable("Manufacturers"));
+            modelBuilder.Entity<Product>(_ => _.ToTable("Products"));
+            modelBuilder.Entity<Scheme>(_ => _.ToTable("Schemes"));
+            modelBuilder.Entity<DewormingScheme>(_ => _.ToTable("DewormingSchemes"));
+            modelBuilder.Entity<VaccinationScheme>(_ => _.ToTable("VaccinationSchemes"));
+            modelBuilder.Entity<Pathogen>(_ => _.ToTable("Pathogens"));
+        }
+
+        private void SetJoiningTableNames(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Farm>()
                 .HasMany(farm => farm.Veterinarians)
                 .WithMany(vets => vets.Farms)
                 .UsingEntity(join => join.ToTable("FarmVeterinarians"));
+        }
+
+        public override int SaveChanges()
+        {
+            AddTimestamps();
+            return base.SaveChanges();
+        }
+
+        private void AddTimestamps()
+        {
+            var entities = ChangeTracker.Entries()
+                .Where(x => x.Entity is Entity && (x.State == EntityState.Added || x.State == EntityState.Modified));
+
+            foreach (var entity in entities)
+            {
+                var now = DateTime.UtcNow;
+
+                if (entity.State == EntityState.Added)
+                {
+                    ((Entity)entity.Entity).CreatedAt = now;
+                }
+                ((Entity)entity.Entity).UpdatedAt = now;
+            }
         }
     }
 
@@ -43,7 +82,7 @@ namespace TN.HealthPortal.Data.EF
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             var databaseConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings:DatabaseConnectionString");
-            optionsBuilder.UseSqlServer("Server=tcp:sql-tnhp-a.database.windows.net,1433;Initial Catalog=db-tnhp-a;Persist Security Info=False;User ID=sqladmin;Password=Time4Coffee;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            optionsBuilder.UseSqlServer(databaseConnectionString);
             return new AppDbContext(optionsBuilder.Options);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TN.HealthPortal.Lib.Models;
-using TN.HealthPortal.Lib.Repositories;
+using TN.HealthPortal.Lib.Entities;
+using TN.HealthPortal.Lib.Services;
 
 namespace TN.HealthPortal.API.Controllers
 {
@@ -8,11 +8,11 @@ namespace TN.HealthPortal.API.Controllers
     [Route("api/[controller]")]
     public class FarmController : Controller
     {
-        private readonly ITempFarmRepository tempFarmRepository;
+        private readonly IFarmService farmService;
 
-        public FarmController(ITempFarmRepository tempFarmRepository)
+        public FarmController(IFarmService farmService)
         {
-            this.tempFarmRepository = tempFarmRepository;
+            this.farmService = farmService;
         }
 
         [HttpGet]
@@ -21,7 +21,7 @@ namespace TN.HealthPortal.API.Controllers
         {
             try
             {
-                return Ok(tempFarmRepository.GetByBlnNumber(blnNumber));
+                return Ok(farmService.GetByBlnNumber(blnNumber));
             }
             catch
             {
@@ -38,7 +38,7 @@ namespace TN.HealthPortal.API.Controllers
 
             try
             {
-                var existingFarm = tempFarmRepository.GetByBlnNumber(blnNumber);
+                var existingFarm = farmService.GetByBlnNumber(blnNumber);
                 return Ok($"Farm with BLN number {blnNumber} already exists");
             }
             catch
@@ -50,18 +50,18 @@ namespace TN.HealthPortal.API.Controllers
                     Address = "Holsted, Jutland, Denmark",
                     SiteType = "Farrow to finish",
                     Capacity = 1250,
+                    History = "Too long, didn't type :)",
                     Source = new Source
                     {
                         Gilt = "Closed Herd",
                         Boar = "Closed Herd",
                         Semen = "S35 GTC",
-                        History = "Too long, didn't type :)"
                     },
                     BlnNumber = blnNumber,
                     Description = "This is a farm from the first PIC Farm Profile Report",
                 };
 
-                tempFarmRepository.Add(farm);
+                farmService.Add(farm);
 
                 return Ok($"Farm created with BLN number {blnNumber}");
             }

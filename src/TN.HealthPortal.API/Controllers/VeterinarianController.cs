@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TN.HealthPortal.Lib.Models;
+using TN.HealthPortal.Lib.Entities;
 
 namespace TN.HealthPortal.API.Controllers
 {
