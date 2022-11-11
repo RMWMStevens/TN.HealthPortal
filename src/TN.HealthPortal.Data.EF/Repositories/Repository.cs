@@ -28,9 +28,10 @@ namespace TN.HealthPortal.Data.EF.Repositories
         }
 
         public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await entities.Where(predicate).ToListAsync();
-        }
+            => await entities.Where(predicate).ToListAsync();
+
+        public async Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> predicate)
+            => await entities.SingleAsync(predicate);
 
         public async Task RemoveAsync(TEntity entity)
         {

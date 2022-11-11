@@ -10,6 +10,8 @@ namespace TN.HealthPortal.Lib.Repositories
 
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
 
+        Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> predicate);
+
         Task RemoveAsync(TEntity entity);
 
         Task RemoveRangeAsync(IEnumerable<TEntity> entities);

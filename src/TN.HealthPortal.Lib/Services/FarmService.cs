@@ -17,7 +17,7 @@ namespace TN.HealthPortal.Lib.Services
             await farmRepository.AddAsync(farm);
         }
 
-        public async Task<Farm> GetByBlnNumberAsync(string blnNumber)
-            => (await farmRepository.FindAsync(_ => _.BlnNumber == blnNumber)).First();
+        public Task<Farm> GetByBlnNumberAsync(string blnNumber)
+            => farmRepository.FindOneAsync(_ => _.BlnNumber == blnNumber);
     }
 }
