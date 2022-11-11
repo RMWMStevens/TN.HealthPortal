@@ -7,5 +7,7 @@ namespace TN.HealthPortal.Lib.Services
         Task AddAsync(Farm farm);
 
         Task<Farm> GetByBlnNumberAsync(string blnNumber);
+
+        Task DeleteByBlnNumberAsync(string blnNumber);
     }
 }

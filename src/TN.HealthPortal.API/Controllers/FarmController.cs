@@ -42,5 +42,12 @@ namespace TN.HealthPortal.API.Controllers
             await farmService.AddAsync(farm);
             return Ok($"Farm created with BLN number {farmCreationRequest.BlnNumber}");
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteFarmByBlnNumberAsync(string blnNumber)
+        {
+            await farmService.DeleteByBlnNumberAsync(blnNumber);
+            return Ok($"Deleted {blnNumber}");
+        }
     }
 }
