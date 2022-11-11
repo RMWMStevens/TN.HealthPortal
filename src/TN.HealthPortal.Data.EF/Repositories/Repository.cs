@@ -12,37 +12,36 @@ namespace TN.HealthPortal.Data.EF.Repositories
         public Repository(AppDbContext context)
         {
             this.context = context;
-
             entities = context.Set<TEntity>();
         }
 
-        public void Add(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
-            context.Add(entity);
-            context.SaveChanges();
+            await context.AddAsync(entity);
+            await context.SaveChangesAsync();
         }
 
-        public void AddRange(IEnumerable<TEntity> entities)
+        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
-            context.AddRange(this.entities);
-            context.SaveChanges();
+            await context.AddRangeAsync(entities);
+            await context.SaveChangesAsync();
         }
 
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return entities.Where(predicate);
+            return await entities.Where(predicate).ToListAsync();
         }
 
-        public void Remove(TEntity entity)
+        public async Task RemoveAsync(TEntity entity)
         {
             context.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public async Task RemoveRangeAsync(IEnumerable<TEntity> entities)
         {
-            context.RemoveRange(this.entities);
-            context.SaveChanges();
+            context.RemoveRange(entities);
+            await context.SaveChangesAsync();
         }
     }
 }

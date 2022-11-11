@@ -4,14 +4,14 @@ namespace TN.HealthPortal.Lib.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        void Add(TEntity entity);
+        Task AddAsync(TEntity entity);
 
-        void AddRange(IEnumerable<TEntity> entities);
+        Task AddRangeAsync(IEnumerable<TEntity> entities);
 
-        IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
 
-        void Remove(TEntity entity);
+        Task RemoveAsync(TEntity entity);
 
-        void RemoveRange(IEnumerable<TEntity> entities);
+        Task RemoveRangeAsync(IEnumerable<TEntity> entities);
     }
 }

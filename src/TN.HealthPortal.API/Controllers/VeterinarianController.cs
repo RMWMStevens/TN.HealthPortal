@@ -9,7 +9,7 @@ namespace TN.HealthPortal.API.Controllers
     {
         [HttpGet]
         [Route("{employeeCode}")]
-        public async Task<IActionResult> GetById(string employeeCode)
+        public IActionResult GetByEmployeeCode(string employeeCode)
         {
             return Ok(new Veterinarian()
             {

@@ -12,17 +12,12 @@ namespace TN.HealthPortal.Lib.Services
             this.farmRepository = farmRepository;
         }
 
-        public void Add(Farm farm)
+        public async Task AddAsync(Farm farm)
         {
-            farmRepository.Add(farm);
+            await farmRepository.AddAsync(farm);
         }
 
-        public Farm GetByBlnNumber(string blnNumber) => farmRepository
-            .Find(_ => _.BlnNumber == blnNumber).First();
-
-        void IFarmService.AddFarmAsync(Farm farm)
-        {
-            farmRepository.Add(farm);
-        }
+        public async Task<Farm> GetByBlnNumberAsync(string blnNumber)
+            => (await farmRepository.FindAsync(_ => _.BlnNumber == blnNumber)).First();
     }
 }
