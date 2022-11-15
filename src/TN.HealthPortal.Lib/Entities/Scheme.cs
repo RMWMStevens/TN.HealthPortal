@@ -16,5 +16,7 @@ namespace TN.HealthPortal.Lib.Entities
         public string PigCategory { get; set; }
 
         public Product Product { get; set; }
+
+        public RouteOfAdministration RouteOfAdministration { get; set; }
     }
 }

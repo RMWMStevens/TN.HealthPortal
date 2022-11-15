@@ -2,6 +2,5 @@
 {
     public class DewormingScheme : Scheme
     {
-        public string RouteOfAdministration { get; set; }
     }
 }
