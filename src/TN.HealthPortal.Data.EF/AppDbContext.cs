@@ -22,11 +22,10 @@ namespace TN.HealthPortal.Data.EF
 
         private void SetPrimaryKeys(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Farm>().HasKey(_ => _.Id);
+            modelBuilder.Entity<Farm>().HasKey(_ => _.BlnNumber);
             modelBuilder.Entity<Manufacturer>().HasKey(_ => _.Name);
             modelBuilder.Entity<Pathogen>().HasKey(_ => _.Name);
-            modelBuilder.Entity<Source>().HasKey(_ => _.FarmId);
-            modelBuilder.Entity<Veterinarian>().HasKey(_ => _.Id);
+            modelBuilder.Entity<Veterinarian>().HasKey(_ => _.EmployeeCode);
         }
 
         private void SetTableNames(ModelBuilder modelBuilder)
@@ -65,13 +64,14 @@ namespace TN.HealthPortal.Data.EF
 
             foreach (var entity in entities)
             {
-                var now = DateTime.UtcNow;
-
                 if (entity.State == EntityState.Added)
                 {
-                    ((Entity)entity.Entity).CreatedAt = now;
+                    ((Entity)entity.Entity).SetCreatedAndUpdated(null); // TODO: Set veterinarian from session
                 }
-                ((Entity)entity.Entity).UpdatedAt = now;
+                else
+                {
+                    ((Entity)entity.Entity).SetUpdated(null); // TODO: Set veterinarian from session
+                }
             }
         }
     }
