@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using TN.HealthPortal.Lib.Entities;
-using TN.HealthPortal.Lib.Entities.Common;
+using TN.HealthPortal.Logic.Entities;
+using TN.HealthPortal.Logic.Entities.Common;
 
 namespace TN.HealthPortal.Data.EF
 {

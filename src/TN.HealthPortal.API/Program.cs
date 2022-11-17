@@ -1,5 +1,5 @@
 using TN.HealthPortal.Data.EF;
-using TN.HealthPortal.Lib;
+using TN.HealthPortal.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,5 +1,5 @@
-﻿using TN.HealthPortal.Lib.Entities;
-using TN.HealthPortal.Lib.Repositories;
+﻿using TN.HealthPortal.Logic.Entities;
+using TN.HealthPortal.Logic.Repositories;
 
 namespace TN.HealthPortal.Data.EF.Repositories
 {

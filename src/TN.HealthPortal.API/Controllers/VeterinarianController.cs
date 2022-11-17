@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TN.HealthPortal.Lib.Entities;
-using TN.HealthPortal.Lib.Enums;
+using TN.HealthPortal.Logic.Entities;
+using TN.HealthPortal.Logic.Enums;
 
 namespace TN.HealthPortal.API.Controllers
 {

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using TN.HealthPortal.API.Models;
-using TN.HealthPortal.Lib.Entities;
-using TN.HealthPortal.Lib.Services;
+using TN.HealthPortal.Logic.DTOs;
+using TN.HealthPortal.Logic.Entities;
+using TN.HealthPortal.Logic.Services;
 
 namespace TN.HealthPortal.API.Controllers
 {
@@ -35,12 +35,12 @@ namespace TN.HealthPortal.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFarmAsync([FromBody] FarmCreationRequest farmCreationRequest)
+        public async Task<IActionResult> AddFarmAsync([FromBody] FarmDto farmDto)
         {
-            var farm = mapper.Map<Farm>(farmCreationRequest);
+            var farm = mapper.Map<Farm>(farmDto);
 
             await farmService.AddAsync(farm);
-            return Ok($"Farm created with BLN number {farmCreationRequest.BlnNumber}");
+            return Ok($"Farm created with BLN number {farmDto.BlnNumber}");
         }
 
         [HttpDelete]

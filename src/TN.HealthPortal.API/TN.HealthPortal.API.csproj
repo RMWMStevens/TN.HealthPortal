@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TN.HealthPortal.Data.EF\TN.HealthPortal.Data.EF.csproj" />
-    <ProjectReference Include="..\TN.HealthPortal.Lib\TN.HealthPortal.Lib.csproj" />
+    <ProjectReference Include="..\TN.HealthPortal.Logic\TN.HealthPortal.Logic.csproj" />
   </ItemGroup>
 
 </Project>

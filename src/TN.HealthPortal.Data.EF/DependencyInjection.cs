@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TN.HealthPortal.Data.EF.Repositories;
-using TN.HealthPortal.Lib.Repositories;
+using TN.HealthPortal.Logic.Repositories;
 
 namespace TN.HealthPortal.Data.EF
 {
