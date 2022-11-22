@@ -29,8 +29,7 @@ namespace TN.HealthPortal.API.Controllers
             }
             catch
             {
-                return StatusCode(404, $"No farm found with this BLN number");
-                throw;
+                return NotFound($"No farm found with BLN number {blnNumber}");
             }
         }
 

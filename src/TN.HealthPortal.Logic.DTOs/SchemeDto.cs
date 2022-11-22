@@ -1,12 +1,9 @@
 ﻿using TN.HealthPortal.Logic.DTOs.Enums;
-using TN.HealthPortal.Logic.Entities.Common;
 
-namespace TN.HealthPortal.Logic.Entities
+namespace TN.HealthPortal.Logic.DTOs
 {
-    public abstract class Scheme : Entity
+    public class SchemeDto
     {
-        public Guid Id { get; set; }
-
         public string Dose { get; set; }
 
         public string Timing { get; set; }
@@ -15,7 +12,7 @@ namespace TN.HealthPortal.Logic.Entities
 
         public string PigCategory { get; set; }
 
-        public Product Product { get; set; }
+        public ProductDto Product { get; set; }
 
         public RouteOfAdministration RouteOfAdministration { get; set; }
     }

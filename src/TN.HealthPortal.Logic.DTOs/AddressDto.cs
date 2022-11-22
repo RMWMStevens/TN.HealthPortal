@@ -1,9 +1,7 @@
-﻿namespace TN.HealthPortal.Logic.Entities
+﻿namespace TN.HealthPortal.Logic.DTOs
 {
-    public class Address
+    public class AddressDto
     {
-        public string FarmBlnNumber { get; set; }
-
         public string Street { get; set; }
 
         public string StreetNumber { get; set; }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TN.HealthPortal.Logic.Entities;
-using TN.HealthPortal.Logic.Enums;
 
 namespace TN.HealthPortal.API.Controllers
 {
@@ -30,13 +29,23 @@ namespace TN.HealthPortal.API.Controllers
                             StreetNumber = "58",
                             PostalCode = "8546WD",
                             State = "Gelderland",
-                            Country = new Country
-                            {
-                                Name = "Nederland",
-                                Region = Region.Europe
-                            },
+
                         },
-                        ProductionTypes = new List<ProductionType> { ProductionType.GeneticNucleus },
+                        Country = new Country
+                        {
+                            Name = "Nederland",
+                            Region = new Region
+                            {
+                                Name = "Europe"
+                            }
+                        },
+                        ProductionTypes = new List<ProductionType>
+                        {
+                            new ProductionType()
+                            {
+                                Name = "Genetic Nucleus"
+                            }
+                        },
                         Capacity = 3500
                     },
                     new Farm
@@ -51,13 +60,22 @@ namespace TN.HealthPortal.API.Controllers
                             StreetNumber = "",
                             PostalCode = "78546",
                             State = "Noordrijn-Westfalen",
-                            Country = new Country
-                            {
-                                Name = "Deutschland",
-                                Region = Region.Europe
-                            },
                         },
-                        ProductionTypes = new List<ProductionType> { ProductionType.Ingene },
+                        Country = new Country
+                        {
+                            Name = "Deutschland",
+                            Region = new Region
+                            {
+                                Name = "Europe"
+                            }
+                        },
+                        ProductionTypes = new List<ProductionType>
+                        {
+                            new ProductionType()
+                            {
+                                Name = "Ingene"
+                            }
+                        },
                         Capacity = 7500
                     }
                 }

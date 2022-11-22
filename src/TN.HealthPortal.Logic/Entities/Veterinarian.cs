@@ -1,5 +1,4 @@
 ﻿using TN.HealthPortal.Logic.Entities.Common;
-using TN.HealthPortal.Logic.Enums;
 
 namespace TN.HealthPortal.Logic.Entities
 {

@@ -1,5 +1,4 @@
 ﻿using TN.HealthPortal.Logic.Entities.Common;
-using TN.HealthPortal.Logic.Enums;
 
 namespace TN.HealthPortal.Logic.Entities
 {
@@ -14,6 +13,8 @@ namespace TN.HealthPortal.Logic.Entities
         public string Description { get; set; }
 
         public Address Address { get; set; }
+
+        public Country Country { get; set; }
 
         public ICollection<ProductionType> ProductionTypes { get; set; }
 
@@ -30,5 +31,7 @@ namespace TN.HealthPortal.Logic.Entities
         public ICollection<VaccinationScheme> VaccinationSchemes { get; set; }
 
         public ICollection<Veterinarian> Veterinarians { get; set; }
+
+        public DateTime? ManuallyUpdatedAt { get; set; }
     }
 }

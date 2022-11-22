@@ -4,9 +4,9 @@ using TN.HealthPortal.Logic.Entities;
 
 namespace TN.HealthPortal.API
 {
-    public class ModelMapping : Profile
+    public class DtoEntityMapping : Profile
     {
-        public ModelMapping()
+        public DtoEntityMapping()
         {
             CreateMap<FarmDto, Farm>().ReverseMap();
         }

@@ -4,7 +4,7 @@ namespace TN.HealthPortal.Logic.Entities
 {
     public class DiseaseStatus : Entity
     {
-        public Guid Id { get; set; }
+        public string FarmBlnNumber { get; set; }
 
         public string Disease { get; set; }
 
