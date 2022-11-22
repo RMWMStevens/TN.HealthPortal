@@ -1,0 +1,39 @@
+﻿@page "/"
+@attribute [Authorize]
+
+<PageTitle>Home</PageTitle>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h2>Farms</h2>
+                <p>View your farms</p>
+                <NavLink href="/farms" class="stretched-link"></NavLink>
+            </div>
+        </div>
+    </div>
+    @if (user.IsAdmin)
+    {
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Veterinarians</h2>
+                    <p>View veterinarians</p>
+                    <NavLink href="/veterinarians" class="stretched-link"></NavLink>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private VeterinarianDto user;
+
+    public Index()
+    {
+        user = new();
+        user.Name = "Admin user";
+        user.IsAdmin = true;
+    }
+}

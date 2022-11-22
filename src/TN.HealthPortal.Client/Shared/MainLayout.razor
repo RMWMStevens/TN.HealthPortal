@@ -1,0 +1,45 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
+
+@if (!string.Equals(pageName, "login", StringComparison.InvariantCultureIgnoreCase))
+{
+    <header class="mb-2">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="/" @onclick:preventDefault @onclick="NavigateToIndexPage">
+                    <img src="images/topigs_norsvin_horizontal.png" alt="Topigs Norsvin Logo" width="200" height="40">
+                </a>
+                <div>
+                    <span class="mx-3">Hello user!</span>
+                    <button type="button" class="btn btn-danger" @onclick="NavigateToLoginPage">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+}
+
+<main>
+    <div class="container">
+        @Body
+    </div>
+</main>
+
+@code {
+    private string pageName;
+
+    private void NavigateToLoginPage()
+    {
+        navigationManager.NavigateTo("login");
+    }
+
+    private void NavigateToIndexPage()
+    {
+        navigationManager.NavigateTo("/");
+    }
+
+    protected override void OnParametersSet()
+    {
+        pageName = (this.Body.Target as RouteView)?.RouteData.PageType.Name;
+        base.OnParametersSet();
+    }
+}

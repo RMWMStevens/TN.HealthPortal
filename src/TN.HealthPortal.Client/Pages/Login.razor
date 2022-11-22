@@ -1,0 +1,47 @@
+﻿@page "/login"
+@inject NavigationManager navigationManager
+@inject ILocalStorageService localStorageService
+@inject AuthenticationStateProvider authenticationStateProvider
+
+<div class="min-vh-100 d-flex align-items-center justify-content-center">
+    <div>
+        <EditForm Model="@veterinarian" OnValidSubmit="Submit">
+            <div class="form-outline mb-4">
+                <label class="form-label" for="employee-code">Employee code</label>
+                <input type="text" id="employee-code" class="form-control" @bind-value="veterinarian.EmployeeCode"/>
+                <input type="submit" class="btn btn-primary btn-block mt-4" value="Log in"/>
+            </div>
+
+@*            <div class="form-outline mb-4">
+                <input type="password" id="password" class="form-control" />
+                <label class="form-label" for="password">Password</label>
+            </div>*@
+        </EditForm>
+        <span class="text-danger">@errorMessage</span>
+    </div>
+</div>
+
+@code {
+    private VeterinarianDto veterinarian = new();
+    private string errorMessage = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await localStorageService.ClearAsync();
+        await authenticationStateProvider.GetAuthenticationStateAsync();
+        await base.OnParametersSetAsync();
+    }
+
+    private async void Submit()
+    {
+        if (veterinarian.EmployeeCode != "123456")
+        {
+            errorMessage = "Login failed, please try again.";
+            return;
+        }
+
+        await localStorageService.SetItemAsStringAsync("employeeCode", veterinarian.EmployeeCode);
+        await authenticationStateProvider.GetAuthenticationStateAsync();
+        navigationManager.NavigateTo("/");
+    }
+}

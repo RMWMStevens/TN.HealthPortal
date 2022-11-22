@@ -1,0 +1,96 @@
+﻿@page "/farms"
+@attribute [Authorize]
+
+<h3>Farms</h3>
+
+<div>
+    @foreach(var farm in farms)
+    {
+        <div class="list-group">
+            <a href="/farms/@farm.BlnNumber" class="stretched-link list-group-item">@farm.Name</a>
+        </div>
+
+        @*<div class="card">
+            <div class="row">
+                <div class="card-header">@farm.Name</div>
+                <div class="col-md-9">
+                    <div class="card-body">
+                       <span>@farm.Description</span> 
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card-body">
+                       <span>@farm.Address.State, @farm.Country.Name</span>
+                    </div>
+                </div>
+            </div>
+            <a href="/farms/@farm.BlnNumber" class="stretched-link"></a>
+        </div>*@
+    }
+</div>
+
+@code {
+    private ICollection<FarmDto> farms = new List<FarmDto>();
+
+    protected override void OnParametersSet()
+    {
+        farms = new List<FarmDto>()
+        {
+            new()
+            {
+                Name = "Test farm 1",
+                BlnNumber = "123456",
+                Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.",
+                Address = new()
+                {
+                    State = "Gelderland",
+                },
+                Country = new()
+                {
+                    Name = "Netherlands",
+                    Region = new()
+                    {
+                        Name = "Europe"
+                    }
+                }
+            },
+            new()
+            {
+                Name = "Test farm 2",
+                BlnNumber = "234567",
+                Description = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+                Address = new()
+                {
+                    State = "Gelderland",
+                },
+                Country = new()
+                {
+                    Name = "Netherlands",
+                    Region = new()
+                    {
+                        Name = "Europe"
+                    }
+                }
+            },
+            new()
+            {
+                Name = "Test farm 3",
+                BlnNumber = "345678",
+                Description = "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                Address = new()
+                {
+                    State = "Gelderland",
+                },
+                Country = new()
+                {
+                    Name = "Netherlands",
+                    Region = new()
+                    {
+                        Name = "Europe"
+                    }
+                }
+            }
+        };
+        base.OnParametersSet();
+    }
+}

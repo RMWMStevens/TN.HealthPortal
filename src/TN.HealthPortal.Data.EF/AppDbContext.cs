@@ -101,8 +101,7 @@ namespace TN.HealthPortal.Data.EF
         public AppDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            var databaseConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings:DatabaseConnectionString");
-            optionsBuilder.UseSqlServer(databaseConnectionString);
+            optionsBuilder.UseSqlServer("");
             return new AppDbContext(optionsBuilder.Options);
         }
     }
