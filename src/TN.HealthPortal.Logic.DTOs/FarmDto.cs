@@ -14,20 +14,15 @@
 
         public CountryDto Country { get; set; }
 
-        public ICollection<ProductionTypeDto> ProductionTypes { get; set; }
+        public ICollection<ProductionTypeDto> ProductionTypes { get; set; } = new List<ProductionTypeDto>();
 
         public int Capacity { get; set; }
 
         public string History { get; set; }
 
-        public ICollection<SourceDto> Sources { get; set; }
+        public ICollection<SourceDto> Sources { get; set; } = new List<SourceDto>();
 
-        public ICollection<DiseaseStatusDto> DiseaseStatuses { get; set; }
+        public ICollection<DiseaseStatusDto> DiseaseStatuses { get; set; } = new List<DiseaseStatusDto>();
 
-        public ICollection<DewormingSchemeDto> DewormingSchemes { get; set; }
-
-        public ICollection<VaccinationSchemeDto> VaccinationSchemes { get; set; }
-
-        public ICollection<VeterinarianDto> Veterinarians { get; set; }
     }
 }

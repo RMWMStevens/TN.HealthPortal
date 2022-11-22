@@ -8,8 +8,6 @@
 
         public bool IsAdmin { get; set; }
 
-        public ICollection<FarmDto> Farms { get; set; }
-
         public ICollection<CountryDto> Countries { get; set; }
 
         public ICollection<RegionDto> Regions { get; set; }
