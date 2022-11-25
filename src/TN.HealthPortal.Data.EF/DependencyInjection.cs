@@ -16,6 +16,7 @@ namespace TN.HealthPortal.Data.EF
                     builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
             services.AddScoped<IFarmRepository, FarmRepository>();
+            services.AddScoped<IVaccinationSchemeRepository, VaccinationSchemeRepository>();
 
             return services;
         }

@@ -8,6 +8,7 @@ namespace TN.HealthPortal.Logic
         public static IServiceCollection AddLogicLayer(this IServiceCollection services)
         {
             services.AddScoped<IFarmService, FarmService>();
+            services.AddScoped<IVaccinationSchemeService, VaccinationSchemeService>();
 
             return services;
         }

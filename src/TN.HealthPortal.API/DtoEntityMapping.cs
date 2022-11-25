@@ -20,6 +20,7 @@ namespace TN.HealthPortal.API
             CreateMap<RegionDto, Region>().ReverseMap();
             CreateMap<SourceDto, Source>().ReverseMap();
             CreateMap<VeterinarianDto, Veterinarian>().ReverseMap();
+            CreateMap<VaccinationSchemeDto, VaccinationScheme>().ReverseMap();
         }
     }
 }

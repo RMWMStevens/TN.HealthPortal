@@ -7,6 +7,8 @@ namespace TN.HealthPortal.Logic.Entities
     {
         public Guid Id { get; set; }
 
+        public string FarmBlnNumber { get; set; }
+
         public string Dose { get; set; }
 
         public string Timing { get; set; }
