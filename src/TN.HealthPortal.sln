@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TN.HealthPortal.Data.EF", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TN.HealthPortal.Logic.DTOs", "TN.HealthPortal.Logic.DTOs\TN.HealthPortal.Logic.DTOs.csproj", "{A531DE82-AE2A-4969-A9D0-80B4A97DE050}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TN.HealthPortal.Client", "TN.HealthPortal.Client\TN.HealthPortal.Client.csproj", "{5F978F2F-3045-4BAB-ABA9-5597300FA776}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TN.HealthPortal.Client", "TN.HealthPortal.Client\TN.HealthPortal.Client.csproj", "{5F978F2F-3045-4BAB-ABA9-5597300FA776}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

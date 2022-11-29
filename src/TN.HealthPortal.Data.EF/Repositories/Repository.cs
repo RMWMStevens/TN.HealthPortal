@@ -27,11 +27,17 @@ namespace TN.HealthPortal.Data.EF.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
-            => await entities.Where(predicate).ToListAsync();
+        public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, string[]? includes = null)
+        {
+            var query = entities;
 
-        public async Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> predicate)
-            => await entities.SingleAsync(predicate);
+            foreach (var include in includes ?? Array.Empty<string>())
+            {
+                query.Include(include);
+            }
+
+            return await query.Where(predicate).ToListAsync();
+        }
 
         public async Task RemoveAsync(TEntity entity)
         {

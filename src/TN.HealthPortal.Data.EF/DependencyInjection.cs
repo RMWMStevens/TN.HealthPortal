@@ -12,8 +12,8 @@ namespace TN.HealthPortal.Data.EF
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("DatabaseConnectionString"),
-                    builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+                        configuration.GetConnectionString("DatabaseConnectionString"),
+                        builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
             services.AddScoped<IFarmRepository, FarmRepository>();
             services.AddScoped<IVaccinationSchemeRepository, VaccinationSchemeRepository>();

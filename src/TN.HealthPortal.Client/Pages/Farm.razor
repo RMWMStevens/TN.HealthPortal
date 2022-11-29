@@ -1,0 +1,9 @@
+﻿@page "/farm/{blnNumber}"
+@attribute [Authorize]
+
+<h3>Farm</h3>
+
+@code {
+    [Parameter]
+    public string BlnNumber { get; set; }
+}

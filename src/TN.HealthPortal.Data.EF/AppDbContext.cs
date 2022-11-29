@@ -18,6 +18,7 @@ namespace TN.HealthPortal.Data.EF
             base.OnModelCreating(modelBuilder);
             SetPrimaryKeys(modelBuilder);
             SetTableNames(modelBuilder);
+            SetAutoIncludes(modelBuilder);
         }
 
         private void SetPrimaryKeys(ModelBuilder modelBuilder)
@@ -63,6 +64,21 @@ namespace TN.HealthPortal.Data.EF
                 .HasMany(vet => vet.Regions)
                 .WithMany(regions => regions.Veterinarians)
                 .UsingEntity(join => join.ToTable("RegionVeterinarians"));
+        }
+
+        private void SetAutoIncludes(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Farm>().Navigation(farm => farm.Address).AutoInclude();
+            modelBuilder.Entity<Farm>().Navigation(farm => farm.Country).AutoInclude();
+            modelBuilder.Entity<Farm>().Navigation(farm => farm.ProductionTypes).AutoInclude();
+            modelBuilder.Entity<Farm>().Navigation(farm => farm.Sources).AutoInclude();
+            modelBuilder.Entity<Farm>().Navigation(farm => farm.DiseaseStatuses).AutoInclude();
+
+            modelBuilder.Entity<Country>().Navigation(country => country.Region).AutoInclude();
+            modelBuilder.Entity<Veterinarian>().Navigation(vet => vet.Regions).AutoInclude();
+            modelBuilder.Entity<DewormingScheme>().Navigation(scheme => scheme.Product).AutoInclude();
+            modelBuilder.Entity<VaccinationScheme>().Navigation(scheme => scheme.Product).AutoInclude();
+            modelBuilder.Entity<VaccinationScheme>().Navigation(scheme => scheme.Pathogen).AutoInclude();
         }
 
         public override int SaveChanges()

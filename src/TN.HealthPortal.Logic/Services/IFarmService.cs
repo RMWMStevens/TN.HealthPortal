@@ -6,7 +6,9 @@ namespace TN.HealthPortal.Logic.Services
     {
         Task AddAsync(Farm farm);
 
-        Task<Farm> GetByBlnNumberAsync(string blnNumber);
+        Task<IEnumerable<Farm>> GetAll(Veterinarian veterinarian);
+
+        Task<Farm?> GetByBlnNumberAsync(string blnNumber);
 
         Task DeleteByBlnNumberAsync(string blnNumber);
     }

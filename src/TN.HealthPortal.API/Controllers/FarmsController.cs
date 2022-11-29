@@ -8,36 +8,39 @@ namespace TN.HealthPortal.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FarmController : Controller
+    public class FarmsController : Controller
     {
         private readonly IFarmService farmService;
         private readonly IMapper mapper;
 
-        public FarmController(IFarmService farmService, IMapper mapper)
+        public FarmsController(IFarmService farmService, IMapper mapper)
         {
             this.farmService = farmService;
             this.mapper = mapper;
         }
 
         [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> GetAll()
+            => Ok(await farmService.GetAll(
+                new Veterinarian() // Temporary solution until this is retrievable from session
+                {
+                    EmployeeCode = "RS",
+                    Regions = new[] { new Region() { Name = "Europe" } }
+                }));
+
+        [HttpGet]
         [Route("{blnNumber}")]
         public async Task<IActionResult> GetByBlnNumberAsync(string blnNumber)
         {
-            try
-            {
-                return Ok(await farmService.GetByBlnNumberAsync(blnNumber));
-            }
-            catch
-            {
-                return NotFound($"No farm found with BLN number {blnNumber}");
-            }
+            var farm = await farmService.GetByBlnNumberAsync(blnNumber);
+            return farm == null ? NotFound() : Ok(farm);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddFarmAsync([FromBody] FarmDto farmDto)
         {
             var farm = mapper.Map<Farm>(farmDto);
-
             await farmService.AddAsync(farm);
             return Ok($"Farm created with BLN number {farmDto.BlnNumber}");
         }

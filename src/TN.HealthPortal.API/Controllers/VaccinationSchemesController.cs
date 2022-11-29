@@ -8,12 +8,12 @@ namespace TN.HealthPortal.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class VaccinationSchemeController : Controller
+    public class VaccinationSchemesController : Controller
     {
         private readonly IVaccinationSchemeService vaccinationSchemeService;
         private readonly IMapper mapper;
 
-        public VaccinationSchemeController(IVaccinationSchemeService vaccinationSchemeService, IMapper mapper)
+        public VaccinationSchemesController(IVaccinationSchemeService vaccinationSchemeService, IMapper mapper)
         {
             this.vaccinationSchemeService = vaccinationSchemeService;
             this.mapper = mapper;

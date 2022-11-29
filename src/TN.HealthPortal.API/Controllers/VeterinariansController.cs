@@ -5,7 +5,7 @@ namespace TN.HealthPortal.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class VeterinarianController : Controller
+    public class VeterinariansController : Controller
     {
         [HttpGet]
         [Route("{employeeCode}")]

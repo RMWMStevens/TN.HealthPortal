@@ -1,5 +1,7 @@
 ﻿@page "/farms"
+@using System.Text.Json;
 @attribute [Authorize]
+@inject HttpClient httpClient
 
 <h3>Farms</h3>
 
@@ -30,67 +32,16 @@
 </div>
 
 @code {
-    private ICollection<FarmDto> farms = new List<FarmDto>();
+    private IEnumerable<FarmDto> farms = new List<FarmDto>();
 
-    protected override void OnParametersSet()
+    protected override async Task OnInitializedAsync()
     {
-        farms = new List<FarmDto>()
+        var result = await httpClient.SendAsync(new()
         {
-            new()
-            {
-                Name = "Test farm 1",
-                BlnNumber = "123456",
-                Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.",
-                Address = new()
-                {
-                    State = "Gelderland",
-                },
-                Country = new()
-                {
-                    Name = "Netherlands",
-                    Region = new()
-                    {
-                        Name = "Europe"
-                    }
-                }
-            },
-            new()
-            {
-                Name = "Test farm 2",
-                BlnNumber = "234567",
-                Description = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-                Address = new()
-                {
-                    State = "Gelderland",
-                },
-                Country = new()
-                {
-                    Name = "Netherlands",
-                    Region = new()
-                    {
-                        Name = "Europe"
-                    }
-                }
-            },
-            new()
-            {
-                Name = "Test farm 3",
-                BlnNumber = "345678",
-                Description = "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                Address = new()
-                {
-                    State = "Gelderland",
-                },
-                Country = new()
-                {
-                    Name = "Netherlands",
-                    Region = new()
-                    {
-                        Name = "Europe"
-                    }
-                }
-            }
-        };
-        base.OnParametersSet();
+            Method = HttpMethod.Get,
+            RequestUri = new Uri("https://localhost:7246/api/Farms")
+        });
+        farms = JsonSerializer.Deserialize<IEnumerable<FarmDto>>(await result.Content.ReadAsStringAsync());
+        await base.OnInitializedAsync();
     }
 }

@@ -17,13 +17,19 @@ namespace TN.HealthPortal.Logic.Services
             await farmRepository.AddAsync(farm);
         }
 
+        public Task<IEnumerable<Farm>> GetAll(Veterinarian veterinarian)
+            => farmRepository.GetAsync(
+                farm => farm.Veterinarians.Contains(veterinarian)
+                || veterinarian.Regions.Contains(farm.Country.Region));
+
+        public async Task<Farm?> GetByBlnNumberAsync(string blnNumber)
+            => (await farmRepository.GetAsync(farm => farm.BlnNumber == blnNumber)).FirstOrDefault();
+
         public async Task DeleteByBlnNumberAsync(string blnNumber)
         {
             var farm = await GetByBlnNumberAsync(blnNumber);
-            await farmRepository.RemoveAsync(farm);
+            if (farm != null)
+                await farmRepository.RemoveAsync(farm);
         }
-
-        public Task<Farm> GetByBlnNumberAsync(string blnNumber)
-            => farmRepository.FindOneAsync(_ => _.BlnNumber == blnNumber);
     }
 }
