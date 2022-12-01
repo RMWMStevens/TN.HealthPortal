@@ -79,6 +79,7 @@ namespace TN.HealthPortal.Data.EF
             modelBuilder.Entity<DewormingScheme>().Navigation(scheme => scheme.Product).AutoInclude();
             modelBuilder.Entity<VaccinationScheme>().Navigation(scheme => scheme.Product).AutoInclude();
             modelBuilder.Entity<VaccinationScheme>().Navigation(scheme => scheme.Pathogen).AutoInclude();
+            modelBuilder.Entity<Product>().Navigation(product => product.Manufacturer).AutoInclude();
         }
 
         public override int SaveChanges()
