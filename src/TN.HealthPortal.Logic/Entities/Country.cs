@@ -1,6 +1,8 @@
-﻿namespace TN.HealthPortal.Logic.Entities
+﻿using TN.HealthPortal.Logic.Entities.Common;
+
+namespace TN.HealthPortal.Logic.Entities
 {
-    public class Country
+    public class Country : IReusableEntity
     {
         public string Name { get; set; }
 

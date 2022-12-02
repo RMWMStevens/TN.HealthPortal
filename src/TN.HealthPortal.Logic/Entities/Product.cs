@@ -2,7 +2,7 @@
 
 namespace TN.HealthPortal.Logic.Entities
 {
-    public class Product : Entity
+    public class Product : Entity, IReusableEntity
     {
         public string Name { get; set; }
 

@@ -41,8 +41,15 @@ namespace TN.HealthPortal.API.Controllers
         public async Task<IActionResult> AddFarmAsync([FromBody] FarmDto farmDto)
         {
             var farm = mapper.Map<Farm>(farmDto);
-            await farmService.AddAsync(farm);
-            return Ok($"Farm created with BLN number {farmDto.BlnNumber}");
+            try
+            {
+                await farmService.AddAsync(farm);
+                return Ok($"Farm created with BLN number {farmDto.BlnNumber}");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]

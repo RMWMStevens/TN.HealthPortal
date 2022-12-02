@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace TN.HealthPortal.Logic.Repositories
+namespace TN.HealthPortal.Logic.Repositories.Generic
 {
     public interface IRepository<TEntity> where TEntity : class
     {

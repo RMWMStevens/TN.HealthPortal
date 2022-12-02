@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using TN.HealthPortal.Logic.Repositories;
+using TN.HealthPortal.Logic.Repositories.Generic;
 
 namespace TN.HealthPortal.Data.EF.Repositories
 {

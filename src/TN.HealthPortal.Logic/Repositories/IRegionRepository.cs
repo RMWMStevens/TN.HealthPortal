@@ -3,5 +3,5 @@ using TN.HealthPortal.Logic.Repositories.Generic;
 
 namespace TN.HealthPortal.Logic.Repositories
 {
-    public interface IVaccinationSchemeRepository : IRepository<VaccinationScheme> { }
+    public interface IRegionRepository : IRepository<Region> { }
 }
