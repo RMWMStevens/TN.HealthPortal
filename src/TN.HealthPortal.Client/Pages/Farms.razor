@@ -36,12 +36,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await httpClient.SendAsync(new()
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri("https://localhost:7246/api/Farms")
-        });
-        farms = JsonSerializer.Deserialize<IEnumerable<FarmDto>>(await result.Content.ReadAsStringAsync());
+        farms = await httpClient.GetFromJsonAsync<IEnumerable<FarmDto>>("https://localhost:7246/api/Farms");
         await base.OnInitializedAsync();
     }
 }

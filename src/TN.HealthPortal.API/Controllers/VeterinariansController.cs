@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using TN.HealthPortal.Logic.Entities;
 
 namespace TN.HealthPortal.API.Controllers
 {
+    [EnableCors]
     [ApiController]
     [Route("api/[controller]")]
     public class VeterinariansController : Controller
