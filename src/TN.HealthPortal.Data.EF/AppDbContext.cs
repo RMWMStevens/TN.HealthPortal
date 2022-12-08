@@ -7,11 +7,9 @@ namespace TN.HealthPortal.Data.EF
 {
     internal class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        { }
-
         public DbSet<Farm> Farms { get; set; }
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,18 +66,7 @@ namespace TN.HealthPortal.Data.EF
 
         private void SetAutoIncludes(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Farm>().Navigation(farm => farm.Address).AutoInclude();
-            modelBuilder.Entity<Farm>().Navigation(farm => farm.Country).AutoInclude();
-            modelBuilder.Entity<Farm>().Navigation(farm => farm.ProductionTypes).AutoInclude();
-            modelBuilder.Entity<Farm>().Navigation(farm => farm.Sources).AutoInclude();
-            modelBuilder.Entity<Farm>().Navigation(farm => farm.DiseaseStatuses).AutoInclude();
-
             modelBuilder.Entity<Country>().Navigation(country => country.Region).AutoInclude();
-            modelBuilder.Entity<Veterinarian>().Navigation(vet => vet.Regions).AutoInclude();
-            modelBuilder.Entity<DewormingScheme>().Navigation(scheme => scheme.Product).AutoInclude();
-            modelBuilder.Entity<VaccinationScheme>().Navigation(scheme => scheme.Product).AutoInclude();
-            modelBuilder.Entity<VaccinationScheme>().Navigation(scheme => scheme.Pathogen).AutoInclude();
-            modelBuilder.Entity<Product>().Navigation(product => product.Manufacturer).AutoInclude();
         }
 
         public override int SaveChanges()

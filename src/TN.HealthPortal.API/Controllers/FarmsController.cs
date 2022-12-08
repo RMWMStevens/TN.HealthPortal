@@ -24,27 +24,30 @@ namespace TN.HealthPortal.API.Controllers
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> GetAll()
-            => Ok(await farmService.GetAll(
+        {
+            var farms = await farmService.GetAll(
                 new Veterinarian() // Temporary solution until this is retrievable from session
                 {
                     EmployeeCode = "RS",
                     Regions = new[] { new Region() { Name = "Europe" } }
-                }));
+                });
+            return Ok(mapper.Map<IEnumerable<FarmDto>>(farms));
+        }
 
         [HttpGet]
         [Route("{blnNumber}")]
         public async Task<IActionResult> GetByBlnNumberAsync(string blnNumber)
         {
             var farm = await farmService.GetByBlnNumberAsync(blnNumber);
-            return farm == null ? NotFound() : Ok(farm);
+            return farm == null ? NotFound() : Ok(mapper.Map<FarmDto>(farm));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddFarmAsync([FromBody] FarmDto farmDto)
         {
-            var farm = mapper.Map<Farm>(farmDto);
             try
             {
+                var farm = mapper.Map<Farm>(farmDto);
                 await farmService.AddAsync(farm);
                 return Ok($"Farm created with BLN number {farmDto.BlnNumber}");
             }

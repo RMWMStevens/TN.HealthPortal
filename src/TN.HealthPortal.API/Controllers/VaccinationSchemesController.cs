@@ -27,7 +27,8 @@ namespace TN.HealthPortal.API.Controllers
         {
             try
             {
-                return Ok(await vaccinationSchemeService.GetByBlnNumberAsync(blnNumber));
+                var vaccinationSchemes = await vaccinationSchemeService.GetByBlnNumberAsync(blnNumber);
+                return Ok(mapper.Map<IEnumerable<VaccinationSchemeDto>>(vaccinationSchemes));
             }
             catch
             {
@@ -39,7 +40,6 @@ namespace TN.HealthPortal.API.Controllers
         public async Task<IActionResult> AddVaccinationSchemeAsync([FromBody] VaccinationSchemeDto vaccinationSchemeDto)
         {
             var vaccinationScheme = mapper.Map<VaccinationScheme>(vaccinationSchemeDto);
-
             await vaccinationSchemeService.AddAsync(vaccinationScheme);
             return Ok($"Vaccination scheme created with BLN number {vaccinationSchemeDto.Product.Name}");
         }

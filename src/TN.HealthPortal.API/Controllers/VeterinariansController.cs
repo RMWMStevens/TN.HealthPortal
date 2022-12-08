@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using TN.HealthPortal.Logic.DTOs;
 using TN.HealthPortal.Logic.Entities;
 
 namespace TN.HealthPortal.API.Controllers
@@ -9,11 +11,18 @@ namespace TN.HealthPortal.API.Controllers
     [Route("api/[controller]")]
     public class VeterinariansController : Controller
     {
+        private readonly IMapper mapper;
+
+        public VeterinariansController(IMapper mapper)
+        {
+            this.mapper = mapper;
+        }
+
         [HttpGet]
         [Route("{employeeCode}")]
         public IActionResult GetByEmployeeCode(string employeeCode)
         {
-            return Ok(new Veterinarian()
+            return Ok(mapper.Map<VeterinarianDto>(new Veterinarian()
             {
                 Name = "John Doe",
                 EmployeeCode = employeeCode,
@@ -81,7 +90,7 @@ namespace TN.HealthPortal.API.Controllers
                         Capacity = 7500
                     }
                 }
-            });
+            }));
         }
     }
 }

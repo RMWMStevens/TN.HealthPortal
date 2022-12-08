@@ -8,7 +8,7 @@ namespace TN.HealthPortal.Logic.Repositories.Generic
 
         Task AddRangeAsync(IEnumerable<TEntity> entities);
 
-        Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, string[]? includes = null);
+        Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
         Task RemoveAsync(TEntity entity);
 
