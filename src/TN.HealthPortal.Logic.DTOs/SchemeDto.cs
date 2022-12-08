@@ -4,6 +4,7 @@ namespace TN.HealthPortal.Logic.DTOs
 {
     public class SchemeDto
     {
+        public string FarmBlnNumber { get; set; }
         public string Dose { get; set; }
 
         public string Timing { get; set; }

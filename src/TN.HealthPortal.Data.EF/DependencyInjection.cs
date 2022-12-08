@@ -19,6 +19,8 @@ namespace TN.HealthPortal.Data.EF
             services.AddScoped<IVaccinationSchemeRepository, VaccinationSchemeRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IRegionRepository, RegionRepository>();
+            services.AddScoped<IPathogenRepository, PathogenRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;
         }
