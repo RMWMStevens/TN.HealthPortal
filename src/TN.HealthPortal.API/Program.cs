@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using TN.HealthPortal.Data.EF;
 using TN.HealthPortal.Logic;
 

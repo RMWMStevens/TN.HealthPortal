@@ -1,9 +1,165 @@
 ﻿@page "/farm/{blnNumber}"
 @attribute [Authorize]
+@inject HttpClient httpClient
 
-<h3>Farm</h3>
+<style>
+
+        * {
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 2%;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .box-wrapper {
+            height: 95vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        #box1 {
+        padding: 10px;
+        border: solid 1px black
+        }
+
+        #box2 {
+        padding: 8px;
+        border: solid 1px black
+        }
+
+        #box3 {
+            padding: 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: row;
+        }
+
+        #box4 {
+        flex-grow: 2;
+        border: solid 1px black
+        }
+
+        .middle-column {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .middle-column div {
+            flex-grow: 1;
+            margin: 0 8px;
+            border: solid 1px black
+        }
+
+        .middle-column div+div {
+            margin-top: 8px
+        }
+
+        #box8 {
+            flex-grow: 1;
+            border: solid 1px black
+        }
+ </style>
+
+<h3>@farm.BlnNumber @farm.Name</h3>
+
+<body>
+    <div class="box-wrapper">
+        <div id="box1">
+            Box 1
+        </div>
+
+        <div id="box2">
+            Box 2
+        </div>
+
+        <div id="box3">
+
+
+            <div class="middle-column">
+                <div id="box5">
+                    Address
+                    <table>
+                        <tr>
+                            <th>Street</th>
+                            <td>@farm.Address.Street</td>
+                        </tr>
+                        <tr>
+                            <th>StreetNumber</th>
+                            <td>@farm.Address.StreetNumber</td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="box6">
+                    Vaccination Protocol
+                    <table>
+                        <tr>
+                            <th>Street</th>
+                            <td>@farm.Address.Street</td>
+                        </tr>
+                        <tr>
+                            <th>StreetNumber</th>
+                            <td>@farm.Address.StreetNumber</td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="box7">
+                    Box 7
+                </div>
+            </div>
+            <div class="middle-column">
+                <div id="box5">
+                    Production Type
+                    <table>
+                        <tr>
+                            <th>Street</th>
+                            <td>@farm.Address.Street</td>
+                        </tr>
+                        <tr>
+                            <th>StreetNumber</th>
+                            <td>@farm.Address.StreetNumber</td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="box6">
+                </div>
+                <div id="box7">
+                    Box 7
+                </div>
+            </div>
+            <div id="box8">
+                Disease Status
+                <table>
+                    <tr>
+                        <th>Street</th>
+                        <td>@farm.Address.Street</td>
+                    </tr>
+                    <tr>
+                        <th>StreetNumber</th>
+                        <td>@farm.Address.StreetNumber</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+            
 
 @code {
     [Parameter]
     public string BlnNumber { get; set; }
+    private FarmDto farm = new FarmDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        farm = await httpClient.GetFromJsonAsync<FarmDto>($"https://localhost:7246/api/Farms/{BlnNumber}");
+        await base.OnInitializedAsync();
+    }
 }

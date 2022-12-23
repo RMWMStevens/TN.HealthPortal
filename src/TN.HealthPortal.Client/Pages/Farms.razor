@@ -3,32 +3,63 @@
 @attribute [Authorize]
 @inject HttpClient httpClient
 
-<h3>Farms</h3>
-
-<div>
-    @foreach(var farm in farms)
-    {
-        <div class="list-group">
-            <a href="/farms/@farm.BlnNumber" class="stretched-link list-group-item">@farm.Name</a>
-        </div>
-
-        @*<div class="card">
-            <div class="row">
-                <div class="card-header">@farm.Name</div>
-                <div class="col-md-9">
-                    <div class="card-body">
-                       <span>@farm.Description</span> 
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card-body">
-                       <span>@farm.Address.State, @farm.Country.Name</span>
-                    </div>
-                </div>
-            </div>
-            <a href="/farms/@farm.BlnNumber" class="stretched-link"></a>
-        </div>*@
+<style>
+    td, th, h3 {
+        padding: 10px;
     }
+
+    .myStyle {
+        border: 2px solid black;
+        margin: 2px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        text-align: left;
+        vertical-align: top;
+        max-width: 250px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .magentaBold {
+        text-decoration: none;
+        font-weight: bolder;
+        color: darkmagenta;
+    }
+ </style>
+
+<div class="myStyle">
+<h3>Farms</h3>
+    <table>
+        <tr>
+            <th>BlnNumber</th>
+            <th>Name</th>
+            <th>PremiseId</th>
+            <th>CountryName</th>
+            <th>Capacity</th>
+            <th>Description</th>
+            <th>History</th>
+        </tr>
+    @foreach(var farm in farms)
+        {
+        <tr>
+            <td>
+              <a href="/farm/@farm.BlnNumber" class="magentaBold">@farm.BlnNumber</a>
+            </td>
+            <td>@farm.Name</td>
+            <td>@farm.PremiseID</td>
+            <td>@farm.Country.Name</td>
+            <td>@farm.Capacity</td>
+            <td>@farm.Description</td>
+            <td>@farm.History</td>
+        </tr>
+    }
+    </table>
 </div>
 
 @code {

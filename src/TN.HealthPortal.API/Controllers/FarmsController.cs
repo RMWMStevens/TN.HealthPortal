@@ -28,8 +28,8 @@ namespace TN.HealthPortal.API.Controllers
             var farms = await farmService.GetAll(
                 new Veterinarian() // Temporary solution until this is retrievable from session
                 {
-                    EmployeeCode = "RS",
-                    Regions = new[] { new Region() { Name = "Europe" } }
+                    EmployeeCode = "MC",
+                    Regions = new[] { new Region() { Name = "Europe" }, new Region() { Name = "Americas" } }
                 });
             return Ok(mapper.Map<IEnumerable<FarmDto>>(farms));
         }
