@@ -23,10 +23,10 @@ namespace TN.HealthPortal.API.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var farms = await farmService.GetAll(
-                new Veterinarian() // Temporary solution until this is retrievable from session
+            var farms = await farmService.GetAllAsync(
+                new Veterinarian() // TODO: Temporary solution until this is retrievable from session
                 {
                     EmployeeCode = "MC",
                     Regions = new[] { new Region() { Name = "Europe" }, new Region() { Name = "Americas" } }
@@ -61,7 +61,7 @@ namespace TN.HealthPortal.API.Controllers
         public async Task<IActionResult> DeleteFarmByBlnNumberAsync(string blnNumber)
         {
             await farmService.DeleteByBlnNumberAsync(blnNumber);
-            return Ok($"Deleted {blnNumber}");
+            return Ok($"Deleted {blnNumber}"); // TODO: What if the farm with given BlnNumber does not exist?
         }
     }
 }

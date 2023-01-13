@@ -33,7 +33,7 @@ namespace TN.HealthPortal.Logic.Services
             await vaccinationSchemeRepository.AddAsync(vaccinationScheme);
         }
 
-        public Task<IEnumerable<VaccinationScheme>> GetByBlnNumberAsync(string blnNumber)
-                => vaccinationSchemeRepository.GetAsync(_ => _.FarmBlnNumber == blnNumber);
+        public async Task<IEnumerable<VaccinationScheme>> GetByBlnNumberAsync(string blnNumber)
+                => await vaccinationSchemeRepository.GetAsync(_ => _.FarmBlnNumber == blnNumber);
     }
 }

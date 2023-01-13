@@ -2,7 +2,9 @@
 using System.Linq.Expressions;
 using TN.HealthPortal.Logic.Repositories.Generic;
 
-namespace TN.HealthPortal.Data.EF.Repositories
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TN.HealthPortal.Data.EF.Tests")]
+
+namespace TN.HealthPortal.Data.EF.Repositories.Generic
 {
     internal class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {

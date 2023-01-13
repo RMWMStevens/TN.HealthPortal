@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TN.HealthPortal.Logic.DTOs;
-using TN.HealthPortal.Logic.Entities;
+using TN.HealthPortal.Logic.Services;
 
 namespace TN.HealthPortal.API.Controllers
 {
@@ -11,86 +11,21 @@ namespace TN.HealthPortal.API.Controllers
     [Route("api/[controller]")]
     public class VeterinariansController : Controller
     {
+        private readonly IVeterinarianService veterinarianService;
         private readonly IMapper mapper;
 
-        public VeterinariansController(IMapper mapper)
+        public VeterinariansController(IVeterinarianService veterinarianService, IMapper mapper)
         {
+            this.veterinarianService = veterinarianService;
             this.mapper = mapper;
         }
 
         [HttpGet]
         [Route("{employeeCode}")]
-        public IActionResult GetByEmployeeCode(string employeeCode)
+        public async Task<IActionResult> GetByEmployeeCodeAsync(string employeeCode)
         {
-            return Ok(mapper.Map<VeterinarianDto>(new Veterinarian()
-            {
-                Name = "John Doe",
-                EmployeeCode = employeeCode,
-                Farms = new List<Farm>()
-                {
-                    new Farm
-                    {
-                        Name = "Van Beek",
-                        BlnNumber = "106860",
-                        PremiseId = "15",
-                        Description = "GN farm producing Z-line",
-                        Address = new Address
-                        {
-                            Street = "Janssen straat",
-                            StreetNumber = "58",
-                            PostalCode = "8546WD",
-                            State = "Gelderland",
-
-                        },
-                        Country = new Country
-                        {
-                            Name = "Nederland",
-                            Region = new Region
-                            {
-                                Name = "Europe"
-                            }
-                        },
-                        ProductionTypes = new List<ProductionType>
-                        {
-                            new ProductionType()
-                            {
-                                Name = "Genetic Nucleus"
-                            }
-                        },
-                        Capacity = 3500
-                    },
-                    new Farm
-                    {
-                        Name = "Ashorst",
-                        BlnNumber = "005630",
-                        PremiseId = "16",
-                        Description = "Ingene farm in Germany",
-                        Address = new Address
-                        {
-                            Street = "Die strasse",
-                            StreetNumber = "",
-                            PostalCode = "78546",
-                            State = "Noordrijn-Westfalen",
-                        },
-                        Country = new Country
-                        {
-                            Name = "Deutschland",
-                            Region = new Region
-                            {
-                                Name = "Europe"
-                            }
-                        },
-                        ProductionTypes = new List<ProductionType>
-                        {
-                            new ProductionType()
-                            {
-                                Name = "Ingene"
-                            }
-                        },
-                        Capacity = 7500
-                    }
-                }
-            }));
+            var veterinarian = await veterinarianService.GetByEmployeeCodeAsync(employeeCode);
+            return veterinarian == null ? NotFound() : Ok(mapper.Map<VeterinarianDto>(veterinarian));
         }
     }
 }

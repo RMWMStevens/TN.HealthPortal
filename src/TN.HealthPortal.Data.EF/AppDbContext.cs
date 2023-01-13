@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Design;
 using TN.HealthPortal.Logic.Entities;
 using TN.HealthPortal.Logic.Entities.Common;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TN.HealthPortal.Data.EF.Tests")]
+
 namespace TN.HealthPortal.Data.EF
 {
     internal class AppDbContext : DbContext
@@ -84,7 +86,7 @@ namespace TN.HealthPortal.Data.EF
         private void AddTimestamps()
         {
             var entities = ChangeTracker.Entries()
-                .Where(x => x.Entity is Entity && (x.State == EntityState.Added || x.State == EntityState.Modified));
+                .Where(_ => _.Entity is Entity && (_.State == EntityState.Added || _.State == EntityState.Modified));
 
             foreach (var entity in entities)
             {

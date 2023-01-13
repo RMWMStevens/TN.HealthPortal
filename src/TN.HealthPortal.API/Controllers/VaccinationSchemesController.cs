@@ -32,7 +32,7 @@ namespace TN.HealthPortal.API.Controllers
             }
             catch
             {
-                return NotFound($"No Vaccination schemes found with BLN number {blnNumber}");
+                return NotFound($"No vaccination schemes found with BLN number {blnNumber}");
             }
         }
 
@@ -41,7 +41,7 @@ namespace TN.HealthPortal.API.Controllers
         {
             var vaccinationScheme = mapper.Map<VaccinationScheme>(vaccinationSchemeDto);
             await vaccinationSchemeService.AddAsync(vaccinationScheme);
-            return Ok($"Vaccination scheme created with BLN number {vaccinationSchemeDto.Product.Name}");
+            return Ok($"Vaccination scheme created for farm with BlnNumber {vaccinationSchemeDto.FarmBlnNumber}");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TN.HealthPortal.Data.EF.Repositories.Generic;
 using TN.HealthPortal.Logic.Entities;
 using TN.HealthPortal.Logic.Repositories;
 

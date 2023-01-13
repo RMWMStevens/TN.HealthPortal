@@ -25,14 +25,14 @@ namespace TN.HealthPortal.Logic.Services
             var dbRegion = (await regionRepository.GetAsync(region => region.Name == farm.Country.Region.Name)).FirstOrDefault();
 
             if (dbCountry == null || dbRegion == null)
-                throw new ArgumentException("This farm's country or region is not a valid", nameof(farm));
+                throw new ArgumentException("This farm's country or region is not valid", nameof(farm));
 
             farm.Country = dbCountry;
             await farmRepository.AddAsync(farm);
         }
 
-        public Task<IEnumerable<Farm>> GetAll(Veterinarian veterinarian)
-            => farmRepository.GetAsync(
+        public async Task<IEnumerable<Farm>> GetAllAsync(Veterinarian veterinarian)
+            => await farmRepository.GetAsync(
                 farm => farm.Veterinarians.Contains(veterinarian)
                 || veterinarian.Regions.Contains(farm.Country.Region));
 

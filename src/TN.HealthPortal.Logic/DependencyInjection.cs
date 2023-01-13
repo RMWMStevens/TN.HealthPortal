@@ -9,6 +9,7 @@ namespace TN.HealthPortal.Logic
         {
             services.AddScoped<IFarmService, FarmService>();
             services.AddScoped<IVaccinationSchemeService, VaccinationSchemeService>();
+            services.AddScoped<IVeterinarianService, VeterinarianService>();
 
             return services;
         }

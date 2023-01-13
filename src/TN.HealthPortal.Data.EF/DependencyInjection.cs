@@ -15,12 +15,13 @@ namespace TN.HealthPortal.Data.EF
                         configuration.GetConnectionString("DatabaseConnectionString"),
                         builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
-            services.AddScoped<IFarmRepository, FarmRepository>();
-            services.AddScoped<IVaccinationSchemeRepository, VaccinationSchemeRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
-            services.AddScoped<IRegionRepository, RegionRepository>();
+            services.AddScoped<IFarmRepository, FarmRepository>();
             services.AddScoped<IPathogenRepository, PathogenRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IRegionRepository, RegionRepository>();
+            services.AddScoped<IVaccinationSchemeRepository, VaccinationSchemeRepository>();
+            services.AddScoped<IVeterinarianRepository, VeterinarianRepository>();
 
             return services;
         }
