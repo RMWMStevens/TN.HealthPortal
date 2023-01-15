@@ -1,7 +1,8 @@
 ﻿@page "/farms"
 @using System.Text.Json;
 @attribute [Authorize]
-@inject HttpClient httpClient
+@inject IHttpClientFactory httpClientFactory
+@inject IConfiguration configuration;
 
 <style>
     td, th, h3 {
@@ -67,7 +68,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        farms = await httpClient.GetFromJsonAsync<IEnumerable<FarmDto>>("https://localhost:7246/api/Farms");
+        var httpClient = httpClientFactory.CreateClient("Api");
+        farms = await httpClient.GetFromJsonAsync<IEnumerable<FarmDto>>($"{configuration["Api:BaseUrl"]}/Farms");
         await base.OnInitializedAsync();
     }
 }

@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager navigationManager
+@inject ILocalStorageService localStorageService
 
 @if (!string.Equals(pageName, "login", StringComparison.InvariantCultureIgnoreCase))
 {
@@ -10,7 +11,7 @@
                     <img src="images/topigs_norsvin_horizontal.png" alt="Topigs Norsvin Logo" width="200" height="40">
                 </a>
                 <div>
-                    <span class="mx-3">Hello user!</span>
+                    <span class="mx-3">Hello @veterinarianName!</span>
                     <button type="button" class="btn btn-danger" @onclick="NavigateToLoginPage">Logout</button>
                 </div>
             </div>
@@ -25,7 +26,14 @@
 </main>
 
 @code {
-    private string pageName;
+    private string? veterinarianName;
+    private string? pageName;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        veterinarianName = await localStorageService.GetItemAsStringAsync("name");
+        await base.OnParametersSetAsync();
+    }
 
     private void NavigateToLoginPage()
     {

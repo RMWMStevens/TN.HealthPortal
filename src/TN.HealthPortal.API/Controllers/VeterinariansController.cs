@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TN.HealthPortal.Logic.DTOs;
@@ -7,6 +8,7 @@ using TN.HealthPortal.Logic.Services;
 namespace TN.HealthPortal.API.Controllers
 {
     [EnableCors]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class VeterinariansController : Controller

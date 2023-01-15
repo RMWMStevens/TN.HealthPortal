@@ -4,6 +4,6 @@
     {
         public string Name { get; set; }
 
-        public ManufacturerDto Manufacturer { get; set; }
+        public ManufacturerDto Manufacturer { get; set; } = new();
     }
 }

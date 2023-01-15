@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace TN.HealthPortal.Client
+namespace TN.HealthPortal.Client.Providers
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
@@ -22,8 +22,8 @@ namespace TN.HealthPortal.Client
             {
                 var identity = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, employeeCode)
-                }, "test authentication type");
+                    new Claim(ClaimTypes.NameIdentifier, employeeCode),
+                }, "authentication type");
 
                 state = new AuthenticationState(new ClaimsPrincipal(identity));
             }

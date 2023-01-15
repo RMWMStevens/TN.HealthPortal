@@ -12,17 +12,17 @@ namespace TN.HealthPortal.API.Tests.Controllers
     public class VeterinariansControllerTests
     {
         private readonly VeterinariansController sut;
-        private readonly Mock<IVeterinarianService> mockVeterinarianService;
-        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IVeterinarianService> veterinarianServiceMock;
+        private readonly Mock<IMapper> mapperMock;
 
-        private readonly string vetEmployeeCode = "MC";
+        private readonly string veterinarianEmployeeCode = "EmployeeCode";
 
         public VeterinariansControllerTests()
         {
-            mockVeterinarianService = new Mock<IVeterinarianService>();
-            mockMapper = new Mock<IMapper>();
+            veterinarianServiceMock = new Mock<IVeterinarianService>();
+            mapperMock = new Mock<IMapper>();
 
-            sut = new VeterinariansController(mockVeterinarianService.Object, mockMapper.Object);
+            sut = new VeterinariansController(veterinarianServiceMock.Object, mapperMock.Object);
         }
 
         [Fact]
@@ -30,15 +30,15 @@ namespace TN.HealthPortal.API.Tests.Controllers
         {
             // Arrange
             var veterinarian = new Veterinarian();
-            mockVeterinarianService
-                .Setup(_ => _.GetByEmployeeCodeAsync(vetEmployeeCode)).ReturnsAsync(veterinarian);
+            veterinarianServiceMock
+                .Setup(_ => _.GetByEmployeeCodeAsync(veterinarianEmployeeCode)).ReturnsAsync(veterinarian);
             var expected = new VeterinarianDto();
-            mockMapper
+            mapperMock
                 .Setup(_ => _.Map<VeterinarianDto>(veterinarian))
                 .Returns(expected);
 
             // Act
-            var result = await sut.GetByEmployeeCodeAsync(vetEmployeeCode);
+            var result = await sut.GetByEmployeeCodeAsync(veterinarianEmployeeCode);
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
@@ -50,12 +50,12 @@ namespace TN.HealthPortal.API.Tests.Controllers
         public async Task GetByEmployeeCode_ShouldReturnNotFoundResult_WhenVeterinarianNotFound()
         {
             // Arrange
-            mockVeterinarianService
-                .Setup(_ => _.GetByEmployeeCodeAsync(vetEmployeeCode))
+            veterinarianServiceMock
+                .Setup(_ => _.GetByEmployeeCodeAsync(veterinarianEmployeeCode))
                 .ReturnsAsync((Veterinarian)null);
 
             // Act
-            var result = await sut.GetByEmployeeCodeAsync(vetEmployeeCode);
+            var result = await sut.GetByEmployeeCodeAsync(veterinarianEmployeeCode);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);

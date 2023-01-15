@@ -1,7 +1,8 @@
 ﻿@page "/farm/{blnNumber}"
 @using System.Text.Json;
 @attribute [Authorize]
-@inject HttpClient httpClient
+@inject IHttpClientFactory httpClientFactory
+@inject IConfiguration configuration
 
 <style>
     td, th {
@@ -75,34 +76,34 @@
             <table>
                 <tr>
                     <th>Street</th>
-                    <td>@address.Street</td>
+                    <td>@farm.Address.Street</td>
                 </tr>
                 <tr>
                     <th>StreetNumber</th>
-                    <td>@address.StreetNumber</td>
+                    <td>@farm.Address.StreetNumber</td>
                 </tr>
                 <tr>
                     <th>City</th>
-                    <td>@address.City</td>
+                    <td>@farm.Address.City</td>
                 </tr>
                 <tr>
                     <th>PostalCode</th>
-                    <td>@address.PostalCode</td>
+                    <td>@farm.Address.PostalCode</td>
                 </tr>
                 <tr>
                     <th>State</th>
-                    <td>@address.State</td>
+                    <td>@farm.Address.State</td>
                 </tr>
                 <tr>
                     <th>CountryName</th>
-                    <td>@country.Name</td>
+                    <td>@farm.Country.Name</td>
                 </tr>
             </table>
         </div>
         <div class="item3">
             <h3>Production type</h3>
             <table>
-                @foreach (var productionType in productionTypes)
+                @foreach (var productionType in farm.ProductionTypes)
                 {
                     <tr>
                         <td>@productionType.Name</td>
@@ -113,7 +114,7 @@
         <div class="item3">
             <h3>Disease status</h3>
             <table>
-                @foreach (var diseaseStatuse in diseaseStatuses)
+                @foreach (var diseaseStatuse in farm.DiseaseStatuses)
                 {
 
                     <tr>
@@ -128,7 +129,7 @@
         <div class="item5">
             <h3>Sources</h3>
             <table>
-                @foreach (var source in sources)
+                @foreach (var source in farm.Sources)
                 {
                     <tr>
                         <td><b>@source.Category</b></td>
@@ -164,20 +165,11 @@
     [Parameter]
     public string BlnNumber { get; set; }
     private FarmDto farm = new FarmDto();
-    private AddressDto address = new AddressDto();
-    private CountryDto country = new CountryDto();
-    private IEnumerable<ProductionTypeDto> productionTypes = new List<ProductionTypeDto>();
-    private IEnumerable<DiseaseStatusDto> diseaseStatuses = new List<DiseaseStatusDto>();
-    private IEnumerable<SourceDto> sources = new List<SourceDto>();
 
     protected override async Task OnInitializedAsync()
     {
-        farm = await httpClient.GetFromJsonAsync<FarmDto>($"https://localhost:7246/api/Farms/{BlnNumber}");
-        address = farm.Address;
-        country = farm.Country;
-        productionTypes = farm.ProductionTypes;
-        diseaseStatuses = farm.DiseaseStatuses;
-        sources = farm.Sources;
+        var httpClient = httpClientFactory.CreateClient("Api");
+        farm = await httpClient.GetFromJsonAsync<FarmDto>($"{configuration["Api:BaseUrl"]}/Farms/{BlnNumber}");
         await base.OnInitializedAsync();
     }
 }

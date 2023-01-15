@@ -34,6 +34,7 @@ namespace TN.HealthPortal.Logic.Services
         public async Task<IEnumerable<Farm>> GetAllAsync(Veterinarian veterinarian)
             => await farmRepository.GetAsync(
                 farm => farm.Veterinarians.Contains(veterinarian)
+                || veterinarian.Countries.Contains(farm.Country)
                 || veterinarian.Regions.Contains(farm.Country.Region));
 
         public async Task<Farm?> GetByBlnNumberAsync(string blnNumber)

@@ -14,7 +14,7 @@ namespace TN.HealthPortal.Logic.DTOs
 
         public string PigCategory { get; set; }
 
-        public ProductDto Product { get; set; }
+        public ProductDto Product { get; set; } = new();
 
         public RouteOfAdministration RouteOfAdministration { get; set; }
     }

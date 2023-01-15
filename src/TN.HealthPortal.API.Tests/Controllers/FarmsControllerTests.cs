@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Security.Claims;
 using TN.HealthPortal.API.Controllers;
 using TN.HealthPortal.Logic.DTOs;
 using TN.HealthPortal.Logic.Entities;
@@ -12,40 +14,55 @@ namespace TN.HealthPortal.API.Tests.Controllers
     public class FarmsControllerTests
     {
         private readonly FarmsController sut;
-        private readonly Mock<IFarmService> mockFarmService;
-        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IFarmService> farmServiceMock;
+        private readonly Mock<IVeterinarianService> veterinarianServiceMock;
+        private readonly Mock<IMapper> mapperMock;
 
         private readonly string blnNumber = "005630";
 
         public FarmsControllerTests()
         {
-            mockFarmService = new Mock<IFarmService>();
-            mockMapper = new Mock<IMapper>();
+            farmServiceMock = new Mock<IFarmService>();
+            veterinarianServiceMock = new Mock<IVeterinarianService>();
+            mapperMock = new Mock<IMapper>();
 
-            sut = new FarmsController(mockFarmService.Object, mockMapper.Object);
+            sut = new FarmsController(farmServiceMock.Object, veterinarianServiceMock.Object, mapperMock.Object);
         }
 
         [Fact]
-        public async Task GetAll_ShouldReturnOkResultWithFarms_WhenFarmsLinkedToVeterinarian()
+        public async Task GetAllAsync_ShouldReturnBadRequest_WhenIdentityIsNull()
         {
             // Arrange
-            var farms = new List<Farm> { new Farm(), new Farm() };
-            mockFarmService
-                .Setup(_ => _.GetAllAsync(It.IsAny<Veterinarian>()))
-                .ReturnsAsync(farms);
-
-            var expected = new List<FarmDto> { new FarmDto(), new FarmDto() };
-            mockMapper
-                .Setup(_ => _.Map<IEnumerable<FarmDto>>(farms))
-                .Returns(expected);
+            sut.ControllerContext = new ControllerContext();
+            sut.ControllerContext.HttpContext = new DefaultHttpContext();
+            sut.ControllerContext.HttpContext.User = new ClaimsPrincipal();
 
             // Act
             var result = await sut.GetAllAsync();
 
             // Assert
-            Assert.IsType<OkObjectResult>(result);
-            var okResult = result as OkObjectResult;
-            Assert.Equal(expected, okResult.Value);
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Failed to retrieve the logged in veterinarian's identity", badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnBadRequest_WhenVeterinarianNotFound()
+        {
+            // Arrange
+            var employeeCode = "EmployeeCode";
+            sut.ControllerContext = new ControllerContext();
+            sut.ControllerContext.HttpContext = new DefaultHttpContext();
+            var identity = new ClaimsIdentity();
+            identity.AddClaim(new Claim(ClaimTypes.Name, employeeCode));
+            sut.ControllerContext.HttpContext.User = new ClaimsPrincipal(identity);
+            veterinarianServiceMock.Setup(_ => _.GetByEmployeeCodeAsync(employeeCode)).ReturnsAsync((Veterinarian)null);
+
+            // Act
+            var result = await sut.GetAllAsync();
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Failed to retrieve the logged in veterinarian's EmployeeCode", badRequestResult.Value);
         }
 
         [Fact]
@@ -53,12 +70,12 @@ namespace TN.HealthPortal.API.Tests.Controllers
         {
             // Arrange
             var farm = new Farm();
-            mockFarmService
+            farmServiceMock
                 .Setup(_ => _.GetByBlnNumberAsync(blnNumber))
                 .ReturnsAsync(farm);
 
             var expected = new FarmDto();
-            mockMapper
+            mapperMock
                 .Setup(_ => _.Map<FarmDto>(farm))
                 .Returns(expected);
 
@@ -75,7 +92,7 @@ namespace TN.HealthPortal.API.Tests.Controllers
         public async Task GetByBlnNumberAsync_ShouldReturnNotFoundResult_WhenFarmNotFound()
         {
             // Arrange
-            mockFarmService
+            farmServiceMock
                 .Setup(_ => _.GetByBlnNumberAsync(blnNumber))
                 .ReturnsAsync((Farm)null);
 
@@ -92,7 +109,7 @@ namespace TN.HealthPortal.API.Tests.Controllers
             // Arrange
             var farmDto = new FarmDto { BlnNumber = blnNumber };
             var farm = new Farm();
-            mockMapper
+            mapperMock
                 .Setup(_ => _.Map<Farm>(farmDto))
                 .Returns(farm);
 
@@ -100,7 +117,7 @@ namespace TN.HealthPortal.API.Tests.Controllers
             var result = await sut.AddFarmAsync(farmDto);
 
             // Assert
-            mockFarmService.Verify(_ => _.AddAsync(farm), Times.Once());
+            farmServiceMock.Verify(_ => _.AddAsync(farm), Times.Once());
             Assert.IsType<OkObjectResult>(result);
             var okResult = result as OkObjectResult;
             Assert.Equal($"Farm created with BLN number {blnNumber}", okResult.Value);
@@ -112,11 +129,11 @@ namespace TN.HealthPortal.API.Tests.Controllers
             // Arrange
             var farmDto = new FarmDto();
             var farm = new Farm();
-            mockMapper
+            mapperMock
                 .Setup(_ => _.Map<Farm>(farmDto))
                 .Returns(farm);
 
-            mockFarmService
+            farmServiceMock
                 .Setup(_ => _.AddAsync(farm))
                 .ThrowsAsync(new ArgumentException("Invalid farm data"));
 
@@ -136,7 +153,7 @@ namespace TN.HealthPortal.API.Tests.Controllers
             var result = await sut.DeleteFarmByBlnNumberAsync(blnNumber);
 
             // Assert
-            mockFarmService.Verify(_ => _.DeleteByBlnNumberAsync(blnNumber), Times.Once());
+            farmServiceMock.Verify(_ => _.DeleteByBlnNumberAsync(blnNumber), Times.Once());
             Assert.IsType<OkObjectResult>(result);
             var okResult = result as OkObjectResult;
             Assert.Equal($"Deleted {blnNumber}", okResult.Value);

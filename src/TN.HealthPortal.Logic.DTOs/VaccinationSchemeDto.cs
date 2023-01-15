@@ -2,6 +2,6 @@
 {
     public class VaccinationSchemeDto : SchemeDto
     {
-        public PathogenDto Pathogen { get; set; }
+        public PathogenDto Pathogen { get; set; } = new();
     }
 }

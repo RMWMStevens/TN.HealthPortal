@@ -10,9 +10,9 @@
 
         public string Description { get; set; }
 
-        public AddressDto Address { get; set; }
+        public AddressDto Address { get; set; } = new();
 
-        public CountryDto Country { get; set; }
+        public CountryDto Country { get; set; } = new();
 
         public ICollection<ProductionTypeDto> ProductionTypes { get; set; } = new List<ProductionTypeDto>();
 
@@ -23,6 +23,5 @@
         public ICollection<SourceDto> Sources { get; set; } = new List<SourceDto>();
 
         public ICollection<DiseaseStatusDto> DiseaseStatuses { get; set; } = new List<DiseaseStatusDto>();
-
     }
 }

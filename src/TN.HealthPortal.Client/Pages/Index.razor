@@ -1,5 +1,6 @@
 ﻿@page "/"
 @attribute [Authorize]
+@inject ILocalStorageService localStorageService
 
 <PageTitle>Home</PageTitle>
 
@@ -13,7 +14,7 @@
             </div>
         </div>
     </div>
-    @if (user.IsAdmin)
+    @if (isAdmin)
     {
         <div class="col">
             <div class="card">
@@ -28,12 +29,11 @@
 </div>
 
 @code {
-    private VeterinarianDto user;
+    private bool isAdmin = false;
 
-    public Index()
+    protected override async Task OnParametersSetAsync()
     {
-        user = new();
-        user.Name = "Admin user";
-        user.IsAdmin = true;
+        isAdmin = await localStorageService.GetItemAsync<bool>("isAdmin");
+        await base.OnParametersSetAsync();
     }
 }

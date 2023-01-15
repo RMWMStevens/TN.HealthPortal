@@ -12,7 +12,7 @@ namespace TN.HealthPortal.Logic.Tests.Services
         private readonly VeterinarianService sut;
         private readonly Mock<IVeterinarianRepository> veterinarianRepositoryMock;
 
-        private readonly string vetEmployeeCode = "MC";
+        private readonly string veterinarianEmployeeCode = "EmployeeCode";
 
         public VeterinarianServiceTests()
         {
@@ -25,15 +25,15 @@ namespace TN.HealthPortal.Logic.Tests.Services
         public async Task GetByEmployeeCode_ShouldReturnVeterinarian_WhenVeterinarianExists()
         {
             // Arrange
-            var vet = new Veterinarian();
+            var veterinarian = new Veterinarian();
             veterinarianRepositoryMock.Setup(_ => _.GetAsync(It.IsAny<Expression<Func<Veterinarian, bool>>>()))
-                .ReturnsAsync(new List<Veterinarian> { vet });
+                .ReturnsAsync(new List<Veterinarian> { veterinarian });
 
             // Act
-            var result = await sut.GetByEmployeeCodeAsync(vetEmployeeCode);
+            var result = await sut.GetByEmployeeCodeAsync(veterinarianEmployeeCode);
 
             // Assert
-            Assert.Equal(vet, result);
+            Assert.Equal(veterinarian, result);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace TN.HealthPortal.Logic.Tests.Services
                 .ReturnsAsync(new List<Veterinarian>());
 
             // Act
-            var result = await sut.GetByEmployeeCodeAsync(vetEmployeeCode);
+            var result = await sut.GetByEmployeeCodeAsync(veterinarianEmployeeCode);
 
             // Assert
             Assert.Null(result);

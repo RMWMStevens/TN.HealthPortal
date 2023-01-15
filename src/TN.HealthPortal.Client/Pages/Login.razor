@@ -2,6 +2,8 @@
 @inject NavigationManager navigationManager
 @inject ILocalStorageService localStorageService
 @inject AuthenticationStateProvider authenticationStateProvider
+@inject IHttpClientFactory httpClientFactory
+@inject IConfiguration configuration;
 
 <div class="min-vh-100 d-flex align-items-center justify-content-center">
     <div>
@@ -11,11 +13,6 @@
                 <input type="text" id="employee-code" class="form-control" @bind-value="veterinarian.EmployeeCode"/>
                 <input type="submit" class="btn btn-primary btn-block mt-4" value="Log in"/>
             </div>
-
-@*            <div class="form-outline mb-4">
-                <input type="password" id="password" class="form-control" />
-                <label class="form-label" for="password">Password</label>
-            </div>*@
         </EditForm>
         <span class="text-danger">@errorMessage</span>
     </div>
@@ -27,21 +24,38 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        await localStorageService.ClearAsync();
-        await authenticationStateProvider.GetAuthenticationStateAsync();
+        await LogoutAsync();
         await base.OnParametersSetAsync();
     }
 
     private async Task Submit()
     {
-        if (veterinarian.EmployeeCode != "123456")
+        try
+        {
+            errorMessage = string.Empty;
+            await localStorageService.SetItemAsStringAsync("employeeCode", veterinarian.EmployeeCode); // Required because otherwise the AuthorizationDelegatingHandler won't be able to retrieve the EmployeeCode
+
+            var httpClient = httpClientFactory.CreateClient("Api");
+            var response = await httpClient.GetAsync($"{configuration["Api:BaseUrl"]}/Veterinarians/{veterinarian.EmployeeCode}");
+            response.EnsureSuccessStatusCode();
+            var result = JsonExtensions.FromJson<VeterinarianDto>(await response.Content.ReadAsStringAsync());
+
+            await localStorageService.SetItemAsStringAsync("name", result.Name);
+            await localStorageService.SetItemAsync<bool>("isAdmin", result.IsAdmin);
+            await authenticationStateProvider.GetAuthenticationStateAsync();
+
+            navigationManager.NavigateTo("/");
+        }
+        catch
         {
             errorMessage = "Login failed, please try again.";
-            return;
+            await LogoutAsync();
         }
+    }
 
-        await localStorageService.SetItemAsStringAsync("employeeCode", veterinarian.EmployeeCode);
+    private async Task LogoutAsync()
+    {
+        await localStorageService.ClearAsync();
         await authenticationStateProvider.GetAuthenticationStateAsync();
-        navigationManager.NavigateTo("/");
     }
 }
