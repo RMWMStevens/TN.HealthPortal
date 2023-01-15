@@ -37,6 +37,13 @@ namespace TN.HealthPortal.Logic.Services
                 || veterinarian.Countries.Contains(farm.Country)
                 || veterinarian.Regions.Contains(farm.Country.Region));
 
+        public async Task<IEnumerable<Farm>> GetAllOutdatedAsync(Veterinarian veterinarian)
+            => await farmRepository.GetAsync(
+                farm => (farm.Veterinarians.Contains(veterinarian)
+                || veterinarian.Countries.Contains(farm.Country)
+                || veterinarian.Regions.Contains(farm.Country.Region))
+                && farm.ManuallyUpdatedAt < DateTime.UtcNow.AddYears(-1));
+
         public async Task<Farm?> GetByBlnNumberAsync(string blnNumber)
             => (await farmRepository.GetAsync(farm => farm.BlnNumber == blnNumber)).FirstOrDefault();
 

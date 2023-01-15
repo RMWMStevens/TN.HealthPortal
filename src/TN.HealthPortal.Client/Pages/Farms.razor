@@ -35,7 +35,10 @@
  </style>
 
 <div class="myStyle">
-<h3>Farms</h3>
+    <h3>@(!viewOutdated ? "Farms" : "Farms with outdated protocols")</h3>
+    <button class="btn btn-primary mb-1 mx-1" @onclick="ToggleViewOutdatedAsync">
+            @(viewOutdated ? "View all farms" : "View farms with outdated protocols")
+    </button>
     <table>
         <tr>
             <th>BlnNumber</th>
@@ -45,31 +48,55 @@
             <th>Capacity</th>
             <th>Description</th>
             <th>History</th>
+            <th>Last Updated</th>
         </tr>
-    @foreach(var farm in farms)
+        @foreach(var farm in farms)
         {
-        <tr>
-            <td>
-              <a href="/farm/@farm.BlnNumber" class="magentaBold">@farm.BlnNumber</a>
-            </td>
-            <td>@farm.Name</td>
-            <td>@farm.PremiseID</td>
-            <td>@farm.Country.Name</td>
-            <td>@farm.Capacity</td>
-            <td>@farm.Description</td>
-            <td>@farm.History</td>
-        </tr>
-    }
+            <tr>
+                <td><a href="/farm/@farm.BlnNumber" class="magentaBold">@farm.BlnNumber</a></td>
+                <td>@farm.Name</td>
+                <td>@farm.PremiseID</td>
+                <td>@farm.Country.Name</td>
+                <td>@farm.Capacity</td>
+                <td>@farm.Description</td>
+                <td>@farm.History</td>
+                <td>@CalculateDaysSinceLastUpdate(farm.ManuallyUpdatedAt)</td>
+            </tr>
+        }
     </table>
 </div>
 
 @code {
     private IEnumerable<FarmDto> farms = new List<FarmDto>();
+    private bool viewOutdated = false;
 
     protected override async Task OnInitializedAsync()
     {
-        var httpClient = httpClientFactory.CreateClient("Api");
-        farms = await httpClient.GetFromJsonAsync<IEnumerable<FarmDto>>($"{configuration["Api:BaseUrl"]}/Farms");
+        await GetFarmsAsync();
         await base.OnInitializedAsync();
+    }
+
+    private async Task GetFarmsAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("Api");
+        var requestUrl = $"{configuration["Api:BaseUrl"]}/Farms";
+        if (viewOutdated)
+        {
+            requestUrl += "/outdated";
+        }
+        farms = await httpClient.GetFromJsonAsync<IEnumerable<FarmDto>>(requestUrl);
+    }
+
+    private async Task ToggleViewOutdatedAsync()
+    {
+        viewOutdated = !viewOutdated;
+        await GetFarmsAsync();
+    }
+
+    private string CalculateDaysSinceLastUpdate(DateTime? updatedAt)
+    {
+        if (!updatedAt.HasValue)
+            return "";
+        return $"{(DateTime.UtcNow - updatedAt.Value.Date).Days} days";
     }
 }

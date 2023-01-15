@@ -23,5 +23,7 @@
         public ICollection<SourceDto> Sources { get; set; } = new List<SourceDto>();
 
         public ICollection<DiseaseStatusDto> DiseaseStatuses { get; set; } = new List<DiseaseStatusDto>();
+
+        public DateTime? ManuallyUpdatedAt { get; set; }
     }
 }

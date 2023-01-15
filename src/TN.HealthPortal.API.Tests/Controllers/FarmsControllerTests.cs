@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
 using TN.HealthPortal.API.Controllers;
+using TN.HealthPortal.API.Helpers;
 using TN.HealthPortal.Logic.DTOs;
 using TN.HealthPortal.Logic.Entities;
 using TN.HealthPortal.Logic.Services;
@@ -15,7 +16,7 @@ namespace TN.HealthPortal.API.Tests.Controllers
     {
         private readonly FarmsController sut;
         private readonly Mock<IFarmService> farmServiceMock;
-        private readonly Mock<IVeterinarianService> veterinarianServiceMock;
+        private readonly Mock<IIdentityHelper> identityHelperMock;
         private readonly Mock<IMapper> mapperMock;
 
         private readonly string blnNumber = "005630";
@@ -23,10 +24,10 @@ namespace TN.HealthPortal.API.Tests.Controllers
         public FarmsControllerTests()
         {
             farmServiceMock = new Mock<IFarmService>();
-            veterinarianServiceMock = new Mock<IVeterinarianService>();
+            identityHelperMock = new Mock<IIdentityHelper>();
             mapperMock = new Mock<IMapper>();
 
-            sut = new FarmsController(farmServiceMock.Object, veterinarianServiceMock.Object, mapperMock.Object);
+            sut = new FarmsController(farmServiceMock.Object, identityHelperMock.Object, mapperMock.Object);
         }
 
         [Fact]
@@ -55,14 +56,14 @@ namespace TN.HealthPortal.API.Tests.Controllers
             var identity = new ClaimsIdentity();
             identity.AddClaim(new Claim(ClaimTypes.Name, employeeCode));
             sut.ControllerContext.HttpContext.User = new ClaimsPrincipal(identity);
-            veterinarianServiceMock.Setup(_ => _.GetByEmployeeCodeAsync(employeeCode)).ReturnsAsync((Veterinarian)null);
+            identityHelperMock.Setup(_ => _.GetLoggedInVeterinarianAsync(identity)).ReturnsAsync((Veterinarian)null);
 
             // Act
             var result = await sut.GetAllAsync();
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Failed to retrieve the logged in veterinarian's EmployeeCode", badRequestResult.Value);
+            Assert.Equal("Failed to retrieve the logged in veterinarian's identity", badRequestResult.Value);
         }
 
         [Fact]

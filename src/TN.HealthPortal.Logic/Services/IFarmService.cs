@@ -8,6 +8,8 @@ namespace TN.HealthPortal.Logic.Services
 
         Task<IEnumerable<Farm>> GetAllAsync(Veterinarian veterinarian);
 
+        Task<IEnumerable<Farm>> GetAllOutdatedAsync(Veterinarian veterinarian);
+
         Task<Farm?> GetByBlnNumberAsync(string blnNumber);
 
         Task DeleteByBlnNumberAsync(string blnNumber);

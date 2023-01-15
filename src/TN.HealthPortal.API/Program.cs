@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using TN.HealthPortal.API.Helpers;
 using TN.HealthPortal.Data.EF;
 using TN.HealthPortal.Logic;
 
@@ -16,6 +17,7 @@ builder.Services.AddCors(options => // TODO: This is not production ready
         .AllowAnyHeader()
     ));
 
+builder.Services.AddScoped<IIdentityHelper, IdentityHelper>();
 builder.Services.AddLogicLayer();
 builder.Services.AddDataLayer(builder.Configuration);
 

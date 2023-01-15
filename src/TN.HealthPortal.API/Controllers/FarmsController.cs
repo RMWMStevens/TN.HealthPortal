@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using TN.HealthPortal.API.Helpers;
 using TN.HealthPortal.Logic.DTOs;
 using TN.HealthPortal.Logic.DTOs.Authentication;
 using TN.HealthPortal.Logic.Entities;
@@ -17,16 +17,16 @@ namespace TN.HealthPortal.API.Controllers
     public class FarmsController : Controller
     {
         private readonly IFarmService farmService;
-        private readonly IVeterinarianService veterinarianService;
+        private readonly IIdentityHelper identityHelper;
         private readonly IMapper mapper;
 
         public FarmsController(
             IFarmService farmService,
-            IVeterinarianService veterinarianService,
+            IIdentityHelper identityHelper,
             IMapper mapper)
         {
             this.farmService = farmService;
-            this.veterinarianService = veterinarianService;
+            this.identityHelper = identityHelper;
             this.mapper = mapper;
         }
 
@@ -34,16 +34,23 @@ namespace TN.HealthPortal.API.Controllers
         [Route("")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity == null)
+            var veterinarian = await identityHelper.GetLoggedInVeterinarianAsync(HttpContext.User.Identity);
+            if (veterinarian == null)
                 return BadRequest("Failed to retrieve the logged in veterinarian's identity");
 
-            var veterinarian = await veterinarianService.GetByEmployeeCodeAsync(
-                identity.FindFirst(ClaimTypes.Name)?.Value);
-            if (veterinarian == null)
-                return BadRequest("Failed to retrieve the logged in veterinarian's EmployeeCode");
-
             var farms = await farmService.GetAllAsync(veterinarian);
+            return Ok(mapper.Map<IEnumerable<FarmDto>>(farms));
+        }
+
+        [HttpGet]
+        [Route("outdated")]
+        public async Task<IActionResult> GetAllOutdatedAsync()
+        {
+            var veterinarian = await identityHelper.GetLoggedInVeterinarianAsync(HttpContext.User.Identity);
+            if (veterinarian == null)
+                return BadRequest("Failed to retrieve the logged in veterinarian's identity");
+
+            var farms = await farmService.GetAllOutdatedAsync(veterinarian);
             return Ok(mapper.Map<IEnumerable<FarmDto>>(farms));
         }
 
