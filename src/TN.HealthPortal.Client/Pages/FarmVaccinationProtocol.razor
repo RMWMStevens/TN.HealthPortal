@@ -1,0 +1,228 @@
+﻿@page "/farm/{blnNumber}/protocol/vaccination"
+@using System.Text.Json;
+@using System.Globalization;
+@attribute [Authorize]
+@inject IHttpClientFactory httpClientFactory
+@inject IConfiguration configuration
+@inject NavigationManager navigationManager
+
+<style>
+    td, th, h3 {
+        padding: 10px;
+    }
+
+    .myStyle {
+        border: 2px solid black;
+        margin: 2px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        text-align: left;
+        vertical-align: top;
+        max-width: 250px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .magentaBold {
+        text-decoration: none;
+        font-weight: bolder;
+        color: darkmagenta;
+    }
+</style>
+
+<div class="myStyle">
+    <h3>@BlnNumber - Vaccination Protocol</h3>
+    <table>
+        <tr>
+            <th>Production Phase</th>
+            <th>Disease Agent</th>
+            <th>Manufacturer</th>
+            <th>Product</th>
+            <th>Dose</th>
+            <th>Timing</th>
+        </tr>
+        @foreach (var scheme in schemes)
+        {
+            <tr>
+                <td>@scheme.ProductionPhase</td>
+                <td>@scheme.Pathogen.Name</td>
+                <td>@scheme.Product.Manufacturer.Name</td>
+                <td>@scheme.Product.Name</td>
+                <td>@scheme.Dose</td>
+                <td>@scheme.Timing</td>
+            </tr>
+        }
+    </table>
+
+    <hr />
+    <p class="mx-2 my-0">Add new vaccination scheme with an existing product:</p>
+    <EditForm Model="@scheme" OnValidSubmit="SubmitAsync">
+    <table>
+        <tr>
+            <th>Production Phase</th>
+            <th>Pig Category</th>
+            <th>Disease Agent</th>
+            <th>Product</th>
+            <th>Dose</th>
+            <th>Timing</th>
+        </tr>
+        <tr>
+            <td>
+                <InputSelect @bind-Value="@scheme.ProductionPhase">
+                    <option value="" selected disabled hidden>--- Choose here ---</option>
+                    @foreach (var productionPhase in Enum.GetValues<ProductionPhase>())
+                    {
+                        <option value="@productionPhase">@productionPhase</option>
+                    }
+                </InputSelect>
+            </td>
+            <td>
+                <InputSelect @bind-Value="@scheme.PigCategory">
+                    <option value="" selected disabled hidden>--- Choose here ---</option>
+                    @foreach (var pigCategory in pigCategories)
+                    {
+                        <option value="@pigCategory">@pigCategory</option>
+                    }
+                </InputSelect>
+            </td>
+            <td>
+                <InputSelect @bind-Value="@scheme.Pathogen.Name">
+                    <option value="" selected disabled hidden>--- Choose here ---</option>
+                    @foreach (var pathogen in schemeDropdownOptions.Pathogens)
+                    {
+                        <option value="@pathogen.Name">@pathogen.Name</option>
+                    }
+                </InputSelect>
+            </td>
+            <td>
+                <InputSelect @bind-Value="@scheme.Product.Name">
+                    <option value="" selected disabled hidden>--- Choose here ---</option>
+                    @foreach (var product in schemeDropdownOptions.Products)
+                    {
+                        <option value="@product.Name">@product.Name</option>
+                    }
+                </InputSelect>
+            </td>
+            <td><input type="text" required class="form-control" @bind-value="scheme.Dose" /></td>
+            <td><input type="text" required class="form-control" @bind-value="scheme.Timing" /></td>
+        </tr>
+    </table>
+    <input type="submit" class="btn btn-primary btn-block m-2" value="Add" />
+    </EditForm>
+
+    <hr />
+    <p class="mx-2 my-0">Add new vaccination scheme with a non-existent product:</p>
+    <EditForm Model="@scheme" OnValidSubmit="SubmitAsync">
+    <table>
+        <tr>
+            <th>Production Phase</th>
+            <th>Pig Category</th>
+            <th>Disease Agent</th>
+            <th>Manufacturer</th>
+            <th>Product</th>
+            <th>Dose</th>
+            <th>Timing</th>
+        </tr>
+        <tr>
+            <td>
+                <InputSelect @bind-Value="@scheme.ProductionPhase">
+                    <option value="" selected disabled hidden>--- Choose here ---</option>
+                    @foreach (var productionPhase in Enum.GetValues<ProductionPhase>())
+                    {
+                        <option value="@productionPhase">@productionPhase</option>
+                    }
+                </InputSelect>
+            </td>
+            <td>
+                <InputSelect @bind-Value="@scheme.PigCategory">
+                    <option value="" selected disabled hidden>--- Choose here ---</option>
+                    @foreach (var pigCategory in pigCategories)
+                    {
+                        <option value="@pigCategory">@pigCategory</option>
+                    }
+                </InputSelect>
+            </td>
+            <td>
+                <InputSelect @bind-Value="@scheme.Pathogen.Name">
+                    <option value="" selected disabled hidden>--- Choose here ---</option>
+                    @foreach (var pathogen in schemeDropdownOptions.Pathogens)
+                    {
+                        <option value="@pathogen.Name">@pathogen.Name</option>
+                    }
+                </InputSelect>
+            </td>
+            <td>
+                <InputSelect @bind-Value="@scheme.Product.Manufacturer.Name">
+                    <option value="" selected disabled hidden>--- Choose here ---</option>
+                    @foreach (var manufacturer in schemeDropdownOptions.Manufacturers)
+                    {
+                        <option value="@manufacturer.Name">@manufacturer.Name</option>
+                    }
+                </InputSelect>
+            </td>
+            <td><input type="text" required class="form-control" @bind-value="scheme.Product.Name" /></td>
+            <td><input type="text" required class="form-control" @bind-value="scheme.Dose" /></td>
+            <td><input type="text" required class="form-control" @bind-value="scheme.Timing" /></td>
+        </tr>
+    </table>
+    <input type="submit" class="btn btn-primary btn-block m-2" value="Add" />
+    </EditForm>
+    <span class="text-danger">@errorMessage</span>
+</div>
+
+@code {
+    [Parameter]
+    public string BlnNumber { get; set; }
+
+    private VaccinationSchemeDto scheme = new();
+    private VaccinationSchemeDropdownOptionsDto schemeDropdownOptions = new();
+    private IEnumerable<VaccinationSchemeDto> schemes = new List<VaccinationSchemeDto>();
+    private IEnumerable<string> pigCategories = new List<string>();
+    private string errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("Api");
+        schemes = await httpClient.GetFromJsonAsync<IEnumerable<VaccinationSchemeDto>>(
+            $"{configuration["Api:BaseUrl"]}/VaccinationSchemes/{BlnNumber}");
+        pigCategories = schemes.Select(_ => _.PigCategory).Distinct();
+        schemeDropdownOptions = await httpClient.GetFromJsonAsync<VaccinationSchemeDropdownOptionsDto>(
+            $"{configuration["Api:BaseUrl"]}/VaccinationSchemes/GetDropdownOptions");
+        scheme.FarmBlnNumber = BlnNumber;
+        await base.OnInitializedAsync();
+    }
+
+    private async Task SubmitAsync()
+    {
+        try
+        {
+            errorMessage = string.Empty;
+
+            if (string.IsNullOrEmpty(scheme.Product.Manufacturer.Name))
+            {
+                var product = schemeDropdownOptions
+                    .Products
+                    .First(_ => _.Name == scheme.Product.Name);
+                scheme.Product.Manufacturer = product.Manufacturer;
+            }
+
+            var httpClient = httpClientFactory.CreateClient("Api");
+            var response = await httpClient.PostAsJsonAsync<VaccinationSchemeDto>(
+                $"{configuration["Api:BaseUrl"]}/VaccinationSchemes", scheme);
+            response.EnsureSuccessStatusCode();
+
+            navigationManager.NavigateTo($"/farm/{BlnNumber}/protocol/vaccination", forceLoad: true);
+        }
+        catch
+        {
+            errorMessage = "Adding vaccination scheme failed, please try again.";
+            throw;
+        }
+    }
+}

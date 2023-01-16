@@ -27,7 +27,10 @@ namespace TN.HealthPortal.API.Controllers
         public async Task<IActionResult> GetByEmployeeCodeAsync(string employeeCode)
         {
             var veterinarian = await veterinarianService.GetByEmployeeCodeAsync(employeeCode);
-            return veterinarian == null ? NotFound() : Ok(mapper.Map<VeterinarianDto>(veterinarian));
+
+            return veterinarian != null
+                ? Ok(mapper.Map<VeterinarianDto>(veterinarian))
+                : NotFound();
         }
     }
 }

@@ -7,6 +7,7 @@ using TN.HealthPortal.Logic.DTOs;
 using TN.HealthPortal.Logic.DTOs.Authentication;
 using TN.HealthPortal.Logic.Entities;
 using TN.HealthPortal.Logic.Services;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TN.HealthPortal.API.Controllers
 {
@@ -35,10 +36,8 @@ namespace TN.HealthPortal.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var veterinarian = await identityHelper.GetLoggedInVeterinarianAsync(HttpContext.User.Identity);
-            if (veterinarian == null)
-                return BadRequest("Failed to retrieve the logged in veterinarian's identity");
-
             var farms = await farmService.GetAllAsync(veterinarian);
+
             return Ok(mapper.Map<IEnumerable<FarmDto>>(farms));
         }
 
@@ -47,10 +46,8 @@ namespace TN.HealthPortal.API.Controllers
         public async Task<IActionResult> GetAllOutdatedAsync()
         {
             var veterinarian = await identityHelper.GetLoggedInVeterinarianAsync(HttpContext.User.Identity);
-            if (veterinarian == null)
-                return BadRequest("Failed to retrieve the logged in veterinarian's identity");
-
             var farms = await farmService.GetAllOutdatedAsync(veterinarian);
+
             return Ok(mapper.Map<IEnumerable<FarmDto>>(farms));
         }
 
@@ -59,31 +56,44 @@ namespace TN.HealthPortal.API.Controllers
         public async Task<IActionResult> GetByBlnNumberAsync(string blnNumber)
         {
             var farm = await farmService.GetByBlnNumberAsync(blnNumber);
-            return farm == null ? NotFound() : Ok(mapper.Map<FarmDto>(farm));
+
+            return farm != null
+                ? Ok(mapper.Map<FarmDto>(farm))
+                : NotFound();
         }
 
         [HttpPost]
         [Authorize(Roles = AuthenticationRoles.Admin)]
         public async Task<IActionResult> AddFarmAsync([FromBody] FarmDto farmDto)
         {
-            try
-            {
-                var farm = mapper.Map<Farm>(farmDto);
-                await farmService.AddAsync(farm);
-                return Ok($"Farm created with BLN number {farmDto.BlnNumber}");
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var farm = mapper.Map<Farm>(farmDto);
+            await farmService.AddAsync(farm);
+
+            return Ok($"Farm created with BLN number {farmDto.BlnNumber}");
         }
 
         [HttpDelete]
         [Authorize(Roles = AuthenticationRoles.Admin)]
-        public async Task<IActionResult> DeleteFarmByBlnNumberAsync(string blnNumber)
+        public async Task<IActionResult> DeleteByBlnNumberAsync(string blnNumber)
         {
             await farmService.DeleteByBlnNumberAsync(blnNumber);
-            return Ok($"Deleted {blnNumber}"); // TODO: What if the farm with given BlnNumber does not exist?
+
+            return Ok($"Deleted {blnNumber}");
+        }
+
+        [HttpGet]
+        [Route("{blnNumber}/DownloadPdfHealthReport")]
+        public async Task<IActionResult> DownloadPdfHealthReportAsync(string blnNumber)
+        {
+            var fileBytes = await farmService.GeneratePdfHealthReportAsync(blnNumber);
+            var fileName = $"{DateTime.UtcNow:yyyy-MM-dd}_HealthReport_{blnNumber}.pdf";
+
+            return Ok(new FileDownloadDto
+            {
+                FileName = fileName,
+                ContentType = Application.Pdf,
+                Content = fileBytes,
+            });
         }
     }
 }

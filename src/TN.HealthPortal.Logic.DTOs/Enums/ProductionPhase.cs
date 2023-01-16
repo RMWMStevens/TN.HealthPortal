@@ -4,8 +4,8 @@
     {
         BoarDeveloper,
         Farrowing,
+        Finisher,
         Gestation,
         GiltDeveloper,
-        Finisher
     }
 }

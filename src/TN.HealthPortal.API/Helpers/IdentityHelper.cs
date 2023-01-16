@@ -14,7 +14,7 @@ namespace TN.HealthPortal.API.Helpers
             this.veterinarianService = veterinarianService;
         }
 
-        public async Task<Veterinarian?> GetLoggedInVeterinarianAsync(IIdentity identity)
+        public async Task<Veterinarian?> GetLoggedInVeterinarianAsync(IIdentity? identity)
         {
             var claimsIdentity = identity as ClaimsIdentity;
             if (claimsIdentity == null)

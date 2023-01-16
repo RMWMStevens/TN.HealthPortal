@@ -7,7 +7,7 @@
 
 <div class="min-vh-100 d-flex align-items-center justify-content-center">
     <div>
-        <EditForm Model="@veterinarian" OnValidSubmit="Submit">
+        <EditForm Model="@veterinarian" OnValidSubmit="SubmitAsync">
             <div class="form-outline mb-4">
                 <label class="form-label" for="employee-code">Employee code</label>
                 <input type="text" id="employee-code" class="form-control" @bind-value="veterinarian.EmployeeCode"/>
@@ -28,15 +28,17 @@
         await base.OnParametersSetAsync();
     }
 
-    private async Task Submit()
+    private async Task SubmitAsync()
     {
         try
         {
             errorMessage = string.Empty;
-            await localStorageService.SetItemAsStringAsync("employeeCode", veterinarian.EmployeeCode); // Required because otherwise the AuthorizationDelegatingHandler won't be able to retrieve the EmployeeCode
+            // Required because otherwise the AuthorizationDelegatingHandler won't be able to retrieve the EmployeeCode
+            await localStorageService.SetItemAsStringAsync("employeeCode", veterinarian.EmployeeCode); 
 
             var httpClient = httpClientFactory.CreateClient("Api");
-            var response = await httpClient.GetAsync($"{configuration["Api:BaseUrl"]}/Veterinarians/{veterinarian.EmployeeCode}");
+            var response = await httpClient.GetAsync(
+                $"{configuration["Api:BaseUrl"]}/Veterinarians/{veterinarian.EmployeeCode}");
             response.EnsureSuccessStatusCode();
             var result = JsonExtensions.FromJson<VeterinarianDto>(await response.Content.ReadAsStringAsync());
 

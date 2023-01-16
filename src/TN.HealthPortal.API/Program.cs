@@ -3,13 +3,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TN.HealthPortal.API.Helpers;
+using TN.HealthPortal.API.Middleware;
 using TN.HealthPortal.Data.EF;
 using TN.HealthPortal.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options => // TODO: This is not production ready
-    options.AddPolicy("CorsPolicy", builder => builder
+builder.Services.AddCors(options // TODO: This is not production ready
+    => options.AddPolicy("CorsPolicy", builder => builder
         .WithOrigins("https://localhost:7106/")
         .AllowAnyMethod()
         .AllowCredentials()
@@ -89,6 +90,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

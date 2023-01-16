@@ -32,6 +32,9 @@ namespace TN.HealthPortal.Data.EF.Repositories.Generic
         public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate)
             => await entities.Where(predicate).ToListAsync();
 
+        public async Task<TEntity?> GetSingleAsync(Expression<Func<TEntity, bool>> predicate)
+            => await entities.Where(predicate).SingleOrDefaultAsync();
+
         public async Task RemoveAsync(TEntity entity)
         {
             context.Remove(entity);

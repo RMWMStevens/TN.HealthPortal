@@ -31,70 +31,87 @@ namespace TN.HealthPortal.API.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetAllAsync_ShouldReturnBadRequest_WhenIdentityIsNull()
+        public async Task GetAllAsync_ShouldReturnOk()
         {
             // Arrange
+            var veterinarian = new Veterinarian();
+            var farms = new List<Farm> { new Farm() };
+            var expected = new List<FarmDto> { new FarmDto() };
+
             sut.ControllerContext = new ControllerContext();
             sut.ControllerContext.HttpContext = new DefaultHttpContext();
             sut.ControllerContext.HttpContext.User = new ClaimsPrincipal();
 
+            identityHelperMock.Setup(_ => _.GetLoggedInVeterinarianAsync(It.IsAny<ClaimsIdentity>()))
+                .ReturnsAsync(veterinarian);
+            farmServiceMock.Setup(_ => _.GetAllAsync(veterinarian))
+                .ReturnsAsync(farms);
+            mapperMock.Setup(_ => _.Map<IEnumerable<FarmDto>>(farms))
+                .Returns(expected);
+
             // Act
             var result = await sut.GetAllAsync();
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Failed to retrieve the logged in veterinarian's identity", badRequestResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<List<FarmDto>>(okResult.Value);
+            Assert.Equal(expected, returnValue);
         }
 
         [Fact]
-        public async Task GetAllAsync_ShouldReturnBadRequest_WhenVeterinarianNotFound()
+        public async Task GetAllOutdatedAsync_ShouldReturnOk()
         {
             // Arrange
-            var employeeCode = "EmployeeCode";
+            var veterinarian = new Veterinarian();
+            var farms = new List<Farm> { new Farm() };
+            var farmsDto = new List<FarmDto> { new FarmDto() };
+
             sut.ControllerContext = new ControllerContext();
             sut.ControllerContext.HttpContext = new DefaultHttpContext();
-            var identity = new ClaimsIdentity();
-            identity.AddClaim(new Claim(ClaimTypes.Name, employeeCode));
-            sut.ControllerContext.HttpContext.User = new ClaimsPrincipal(identity);
-            identityHelperMock.Setup(_ => _.GetLoggedInVeterinarianAsync(identity)).ReturnsAsync((Veterinarian)null);
+            sut.ControllerContext.HttpContext.User = new ClaimsPrincipal();
+
+            identityHelperMock.Setup(x => x.GetLoggedInVeterinarianAsync(It.IsAny<ClaimsIdentity>()))
+                .ReturnsAsync(veterinarian);
+            farmServiceMock.Setup(_ => _.GetAllOutdatedAsync(veterinarian))
+                .ReturnsAsync(farms);
+            mapperMock.Setup(_ => _.Map<IEnumerable<FarmDto>>(farms))
+                .Returns(farmsDto);
 
             // Act
-            var result = await sut.GetAllAsync();
+            var result = await sut.GetAllOutdatedAsync();
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Failed to retrieve the logged in veterinarian's identity", badRequestResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<List<FarmDto>>(okResult.Value);
+            Assert.Equal(farmsDto, returnValue);
         }
 
         [Fact]
-        public async Task GetByBlnNumberAsync_ShouldReturnOkResultWithFarm_WhenFarmExists()
+        public async Task GetByBlnNumberAsync_ShouldReturnOk_WhenFarmExists()
         {
             // Arrange
             var farm = new Farm();
-            farmServiceMock
-                .Setup(_ => _.GetByBlnNumberAsync(blnNumber))
-                .ReturnsAsync(farm);
+            var farmDto = new FarmDto();
 
-            var expected = new FarmDto();
-            mapperMock
-                .Setup(_ => _.Map<FarmDto>(farm))
-                .Returns(expected);
+            farmServiceMock.Setup(_ => _.GetByBlnNumberAsync(blnNumber))
+                .ReturnsAsync(farm);
+            mapperMock.Setup(_ => _.Map<FarmDto>(farm))
+                .Returns(farmDto);
 
             // Act
             var result = await sut.GetByBlnNumberAsync(blnNumber);
 
             // Assert
-            Assert.IsType<OkObjectResult>(result);
-            var okResult = result as OkObjectResult;
-            Assert.Equal(expected, okResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<FarmDto>(okResult.Value);
+            Assert.Equal(farmDto, returnValue);
         }
 
         [Fact]
-        public async Task GetByBlnNumberAsync_ShouldReturnNotFoundResult_WhenFarmNotFound()
+        public async Task GetByBlnNumberAsync_ShouldReturnNotFound_WhenFarmNotExists()
         {
             // Arrange
-            farmServiceMock
-                .Setup(_ => _.GetByBlnNumberAsync(blnNumber))
+            farmServiceMock.Setup(_ => _.GetByBlnNumberAsync(blnNumber))
                 .ReturnsAsync((Farm)null);
 
             // Act
@@ -105,59 +122,60 @@ namespace TN.HealthPortal.API.Tests.Controllers
         }
 
         [Fact]
-        public async Task AddFarmAsync_ShouldReturnOkResultWithFarmBlnNumber_WhenFarmCreated()
+        public async Task AddFarmAsync_ShouldReturnOk()
         {
             // Arrange
             var farmDto = new FarmDto { BlnNumber = blnNumber };
-            var farm = new Farm();
-            mapperMock
-                .Setup(_ => _.Map<Farm>(farmDto))
+            var farm = new Farm { BlnNumber = blnNumber };
+
+            mapperMock.Setup(_ => _.Map<Farm>(farmDto))
                 .Returns(farm);
 
             // Act
             var result = await sut.AddFarmAsync(farmDto);
 
             // Assert
-            farmServiceMock.Verify(_ => _.AddAsync(farm), Times.Once());
-            Assert.IsType<OkObjectResult>(result);
-            var okResult = result as OkObjectResult;
-            Assert.Equal($"Farm created with BLN number {blnNumber}", okResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<string>(okResult.Value);
+            Assert.Equal($"Farm created with BLN number {farmDto.BlnNumber}", returnValue);
         }
 
         [Fact]
-        public async Task AddFarmAsync_ShouldReturnBadRequestResult_WhenArgumentExceptionThrown()
+        public async Task DeleteByBlnNumberAsync_ShouldReturnOk()
+        {
+            // Act
+            var result = await sut.DeleteByBlnNumberAsync(blnNumber);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<string>(okResult.Value);
+            Assert.Equal($"Deleted {blnNumber}", returnValue);
+        }
+
+        [Fact]
+        public async Task DownloadPdfHealthReportAsync_ShouldReturnOk()
         {
             // Arrange
-            var farmDto = new FarmDto();
-            var farm = new Farm();
-            mapperMock
-                .Setup(_ => _.Map<Farm>(farmDto))
-                .Returns(farm);
+            var fileBytes = new byte[] { 1, 2, 3 };
+            var fileName = "test.pdf";
+            var expectedFileDownloadDto = new FileDownloadDto
+            {
+                FileName = fileName,
+                ContentType = "application/pdf",
+                Content = fileBytes
+            };
 
-            farmServiceMock
-                .Setup(_ => _.AddAsync(farm))
-                .ThrowsAsync(new ArgumentException("Invalid farm data"));
+            farmServiceMock.Setup(_ => _.GeneratePdfHealthReportAsync(blnNumber))
+                .ReturnsAsync(fileBytes);
 
             // Act
-            var result = await sut.AddFarmAsync(farmDto);
+            var result = await sut.DownloadPdfHealthReportAsync(blnNumber);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(result);
-            var badRequestResult = result as BadRequestObjectResult;
-            Assert.Equal("Invalid farm data", badRequestResult.Value);
-        }
-
-        [Fact]
-        public async Task DeleteFarmByBlnNumberAsync_ShouldReturnOkResultWithDeletedBlnNumber_WhenFarmDeleted()
-        {
-            // Act
-            var result = await sut.DeleteFarmByBlnNumberAsync(blnNumber);
-
-            // Assert
-            farmServiceMock.Verify(_ => _.DeleteByBlnNumberAsync(blnNumber), Times.Once());
-            Assert.IsType<OkObjectResult>(result);
-            var okResult = result as OkObjectResult;
-            Assert.Equal($"Deleted {blnNumber}", okResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<FileDownloadDto>(okResult.Value);
+            Assert.Equal(expectedFileDownloadDto.ContentType, returnValue.ContentType);
+            Assert.Equal(expectedFileDownloadDto.Content, returnValue.Content);
         }
     }
 }

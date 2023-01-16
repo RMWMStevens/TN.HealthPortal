@@ -5,6 +5,6 @@ namespace TN.HealthPortal.API.Helpers
 {
     public interface IIdentityHelper
     {
-        Task<Veterinarian?> GetLoggedInVeterinarianAsync(IIdentity identity);
+        Task<Veterinarian?> GetLoggedInVeterinarianAsync(IIdentity? identity);
     }
 }

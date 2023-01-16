@@ -26,8 +26,8 @@ namespace TN.HealthPortal.Logic.Tests.Services
         {
             // Arrange
             var veterinarian = new Veterinarian();
-            veterinarianRepositoryMock.Setup(_ => _.GetAsync(It.IsAny<Expression<Func<Veterinarian, bool>>>()))
-                .ReturnsAsync(new List<Veterinarian> { veterinarian });
+            veterinarianRepositoryMock.Setup(_ => _.GetSingleAsync(It.IsAny<Expression<Func<Veterinarian, bool>>>()))
+                .ReturnsAsync(veterinarian);
 
             // Act
             var result = await sut.GetByEmployeeCodeAsync(veterinarianEmployeeCode);

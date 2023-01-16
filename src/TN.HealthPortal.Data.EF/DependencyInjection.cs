@@ -16,12 +16,14 @@ namespace TN.HealthPortal.Data.EF
                         builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
             services.AddScoped<ICountryRepository, CountryRepository>();
+            services.AddScoped<IDewormingSchemeRepository, DewormingSchemeRepository>();
             services.AddScoped<IFarmRepository, FarmRepository>();
             services.AddScoped<IPathogenRepository, PathogenRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IVaccinationSchemeRepository, VaccinationSchemeRepository>();
             services.AddScoped<IVeterinarianRepository, VeterinarianRepository>();
+            services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
 
             return services;
         }

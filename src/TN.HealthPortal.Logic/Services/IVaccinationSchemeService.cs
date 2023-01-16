@@ -8,5 +8,10 @@ namespace TN.HealthPortal.Logic.Services
 
         Task<IEnumerable<VaccinationScheme>> GetByBlnNumberAsync(string blnNumber);
 
+        Task<IEnumerable<Manufacturer>?> GetManufacturerDropdownOptionsAsync();
+
+        Task<IEnumerable<Pathogen>?> GetPathogenDropdownOptionsAsync();
+
+        Task<IEnumerable<Product>?> GetProductDropdownOptionsAsync();
     }
 }

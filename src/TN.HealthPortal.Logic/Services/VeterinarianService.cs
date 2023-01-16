@@ -5,7 +5,7 @@ namespace TN.HealthPortal.Logic.Services
 {
     public class VeterinarianService : IVeterinarianService
     {
-        readonly IVeterinarianRepository veterinarianRepository;
+        private readonly IVeterinarianRepository veterinarianRepository;
 
         public VeterinarianService(IVeterinarianRepository veterinarianRepository)
         {
@@ -13,6 +13,7 @@ namespace TN.HealthPortal.Logic.Services
         }
 
         public async Task<Veterinarian?> GetByEmployeeCodeAsync(string employeeCode)
-            => (await veterinarianRepository.GetAsync(vet => vet.EmployeeCode == employeeCode)).FirstOrDefault();
+            => await veterinarianRepository.GetSingleAsync(vet
+                => vet.EmployeeCode == employeeCode);
     }
 }

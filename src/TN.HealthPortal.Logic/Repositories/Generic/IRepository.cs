@@ -10,6 +10,8 @@ namespace TN.HealthPortal.Logic.Repositories.Generic
 
         Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
+        Task<TEntity?> GetSingleAsync(Expression<Func<TEntity, bool>> predicate);
+
         Task RemoveAsync(TEntity entity);
 
         Task RemoveRangeAsync(IEnumerable<TEntity> entities);

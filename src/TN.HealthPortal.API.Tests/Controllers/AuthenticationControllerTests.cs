@@ -20,10 +20,7 @@ namespace TN.HealthPortal.API.Tests.Controllers
             veterinarianServiceMock = new Mock<IVeterinarianService>();
             configurationMock = new Mock<IConfiguration>();
 
-            sut = new AuthenticationController(
-                veterinarianServiceMock.Object,
-                configurationMock.Object
-            );
+            sut = new AuthenticationController(veterinarianServiceMock.Object, configurationMock.Object);
         }
 
         [Fact]

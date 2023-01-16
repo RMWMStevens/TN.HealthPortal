@@ -44,8 +44,8 @@ namespace TN.HealthPortal.API.Controllers
             {
                 authClaims.Add(new Claim(ClaimTypes.Role, AuthenticationRoles.Admin));
             }
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
                 audience: configuration["JWT:ValidAudience"],

@@ -3,6 +3,7 @@
 @attribute [Authorize]
 @inject IHttpClientFactory httpClientFactory
 @inject IConfiguration configuration
+@inject IJSRuntime JSRuntime
 
 <style>
     td, th {
@@ -16,6 +17,10 @@
         color: darkmagenta;
     }
 
+    a {
+        text-decoration: none;
+    }
+
     .flex-container {
         display: flex;
         height: 100%;
@@ -23,11 +28,11 @@
         gap: 10px;
     }
 
-        .flex-container > div {
-            border: 4px solid black;
-            border-radius: 10px;
-            padding: 10px;
-        }
+    .flex-container > div {
+        border: 4px solid black;
+        border-radius: 10px;
+        padding: 10px;
+    }
 
     .item1 {
         flex-grow: 1;
@@ -112,11 +117,10 @@
             </table>
         </div>
         <div class="item3">
-            <h3>Disease status</h3>
+            <h3>Disease Status</h3>
             <table>
                 @foreach (var diseaseStatuse in farm.DiseaseStatuses)
                 {
-
                     <tr>
                         <td>@diseaseStatuse.Disease</td>
                         <td>@diseaseStatuse.Status</td>
@@ -141,10 +145,9 @@
     </div>
     <div class="flex-container">
         <div class="item3">
-            <h3>Vaccination Protocol</h3>
-            
-            <h3>Deworming Protocol</h3>
-            <h3><b>Health report</b></h3>
+            <h3>View <a href="/farm/@farm.BlnNumber/protocol/deworming" class="magentaBold">Deworming Protocol</a></h3>
+            <h3>View <a href="/farm/@farm.BlnNumber/protocol/vaccination" class="magentaBold">Vaccination Protocol</a></h3>
+            <h3><strong><a class="btn btn-primary" @onclick:preventDefault @onclick="DownloadPdfHealthReportAsync">Download PDF Health Report</a></strong></h3>
         </div>
         <div class="item4">
             <h3>Background information</h3>
@@ -160,6 +163,23 @@
             </table>
         </div>
     </div>
+
+    @*Based on https://www.meziantou.net/generating-and-downloading-a-file-in-a-blazor-webassembly-application.htm*@
+    <script suppress-error="BL9992">
+        function BlazorDownloadFile(filename, contentType, content) {
+            const file = new File([content], filename, { type: contentType });
+            const exportUrl = URL.createObjectURL(file);
+            const a = document.createElement("a");
+
+            document.body.appendChild(a);
+            a.href = exportUrl;
+            a.download = filename;
+            a.target = "_self";
+            a.click();
+
+            URL.revokeObjectURL(exportUrl);
+        }
+    </script>
 </body>
 
 @code {
@@ -170,7 +190,20 @@
     protected override async Task OnInitializedAsync()
     {
         var httpClient = httpClientFactory.CreateClient("Api");
-        farm = await httpClient.GetFromJsonAsync<FarmDto>($"{configuration["Api:BaseUrl"]}/Farms/{BlnNumber}");
+        farm = await httpClient.GetFromJsonAsync<FarmDto>(
+            $"{configuration["Api:BaseUrl"]}/Farms/{BlnNumber}");
         await base.OnInitializedAsync();
+    }
+
+    private async Task DownloadPdfHealthReportAsync()
+    {
+        var httpClient = httpClientFactory.CreateClient("Api");
+        var fileDownloadDto = await httpClient.GetFromJsonAsync<FileDownloadDto>(
+            $"{configuration["Api:BaseUrl"]}/Farms/{BlnNumber}/DownloadPdfHealthReport");
+        await JSRuntime.InvokeVoidAsync(
+            "BlazorDownloadFile",
+            fileDownloadDto.FileName,
+            fileDownloadDto.ContentType,
+            fileDownloadDto.Content);
     }
 }
